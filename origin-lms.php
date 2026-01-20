@@ -46,3 +46,5 @@ require_once GPTWP_PATH . 'includes/achievements.php';
 require_once GPTWP_PATH . 'includes/elementor/class-elementor-loader.php';
 
 // FIN DEL DOCUMENTO
+
+?>
