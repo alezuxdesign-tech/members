@@ -1,10 +1,13 @@
 <?php
-/*
-Plugin Name: Alezux Members
-Description: Funcionalidades personalizadas modularizadas.
-Version: 2.0.1
-Author: <a href="https://alezuxdesign.com">Alezux Design</a>
-*/
+/**
+ * Plugin Name: Alezux Members
+ * Plugin URI:  https://github.com/alezuxdesign-tech/members
+ * Description: Funcionalidades personalizadas modularizadas.
+ * Version:     2.0.1
+ * Author:      Alezux Design
+ * Author URI:  https://alezuxdesign.com
+ * License:     GPL v2 or later
+ */
 
 // Evitar acceso directo
 if ( ! defined( 'ABSPATH' ) ) {
