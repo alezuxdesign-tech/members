@@ -2,7 +2,7 @@
 /*
 Plugin Name: Custom Functions Origin LMS
 Description: Funcionalidades personalizadas modularizadas.
-Version: 2.0
+Version: 2.0.1
 Author: <a href="https://alezuxdesign.com">Alezux Design</a>
 */
 
