@@ -115,6 +115,15 @@ class Origin_LMS_Widget_Topic_List extends \Elementor\Widget_Base {
             ]
         );
         
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'item_border',
+                'label' => esc_html__( 'Borde', 'origin-lms' ),
+                'selector' => '{{WRAPPER}} .topic-item',
+            ]
+        );
+        
         $this->end_controls_tab();
 
         // Activo
@@ -147,6 +156,15 @@ class Origin_LMS_Widget_Topic_List extends \Elementor\Widget_Base {
                     '{{WRAPPER}} .topic-item.topic-activo .topic-title' => 'color: {{VALUE}};',
                     '{{WRAPPER}} .topic-item.topic-activo .topic-author' => 'color: {{VALUE}}; opacity: 0.9;',
                 ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Border::get_type(),
+            [
+                'name' => 'item_active_border',
+                'label' => esc_html__( 'Borde Activo', 'origin-lms' ),
+                'selector' => '{{WRAPPER}} .topic-item.topic-activo',
             ]
         );
 
