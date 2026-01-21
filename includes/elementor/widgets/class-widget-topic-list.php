@@ -141,7 +141,7 @@ class Origin_LMS_Widget_Topic_List extends \Elementor\Widget_Base {
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => 'rgba(212, 175, 55, 0.15)',
                 'selectors' => [
-                    '{{WRAPPER}} .topic-item.topic-activo' => 'background-color: {{VALUE}}; box-shadow: 0 0 0 1px #D4AF37 inset;',
+                    '{{WRAPPER}} .topic-item.topic-activo' => 'background-color: {{VALUE}};',
                 ],
             ]
         );
@@ -165,6 +165,16 @@ class Origin_LMS_Widget_Topic_List extends \Elementor\Widget_Base {
                 'name' => 'item_active_border',
                 'label' => esc_html__( 'Borde Activo', 'origin-lms' ),
                 'selector' => '{{WRAPPER}} .topic-item.topic-activo',
+                'defaults' => [
+                    'border' => 'solid',
+                    'width' => [
+                        'top' => 1,
+                        'right' => 1,
+                        'bottom' => 1,
+                        'left' => 1,
+                    ],
+                    'color' => '#D4AF37',
+                ],
             ]
         );
 
