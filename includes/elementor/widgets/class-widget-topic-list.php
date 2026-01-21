@@ -132,7 +132,7 @@ class Origin_LMS_Widget_Topic_List extends \Elementor\Widget_Base {
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => 'rgba(212, 175, 55, 0.15)',
                 'selectors' => [
-                    '{{WRAPPER}} .topic-item.topic-active' => 'background-color: {{VALUE}}; box-shadow: 0 0 0 1px #D4AF37 inset;',
+                    '{{WRAPPER}} .topic-item.topic-activo' => 'background-color: {{VALUE}}; box-shadow: 0 0 0 1px #D4AF37 inset;',
                 ],
             ]
         );
@@ -144,8 +144,8 @@ class Origin_LMS_Widget_Topic_List extends \Elementor\Widget_Base {
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#D4AF37',
                 'selectors' => [
-                    '{{WRAPPER}} .topic-item.topic-active .topic-title' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .topic-item.topic-active .topic-author' => 'color: {{VALUE}}; opacity: 0.9;',
+                    '{{WRAPPER}} .topic-item.topic-activo .topic-title' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .topic-item.topic-activo .topic-author' => 'color: {{VALUE}}; opacity: 0.9;',
                 ],
             ]
         );
@@ -288,10 +288,13 @@ class Origin_LMS_Widget_Topic_List extends \Elementor\Widget_Base {
         echo '<div class="contenedor-topics-personalizado">';
         
         foreach ( $topics as $topic ) {
-            $is_active = $topic->ID === $current_topic_id ? ' topic-active' : '';
-            $thumbnail = get_the_post_thumbnail( $topic->ID, 'medium', ['class' => 'topic-img-tag'] );
+            // Updated class name to match shortcode: topic-activo
+            $is_active = $topic->ID === $current_topic_id ? ' topic-activo' : '';
+            // Updated image class to match shortcode: imagen-topic
+            $thumbnail = get_the_post_thumbnail( $topic->ID, 'medium', ['class' => 'imagen-topic'] );
             if( empty($thumbnail) ) {
-                $thumbnail = '<img src="https://via.placeholder.com/80" class="topic-img-tag placeholder">';
+                // Also updated placeholder class
+                $thumbnail = '<img src="https://via.placeholder.com/80" class="imagen-topic placeholder">';
             }
             
             $title = esc_html( get_the_title( $topic->ID ) );
@@ -312,29 +315,6 @@ class Origin_LMS_Widget_Topic_List extends \Elementor\Widget_Base {
 
         echo '</div>';
         
-        ?>
-        <style>
-            /* Base Structure */
-            .titulo-leccion h2 { margin-bottom: 25px; font-weight: 700; }
-            
-            .topic-item { 
-                transition: all 0.3s ease; 
-                overflow: hidden; 
-            }
-            .topic-item:hover { transform: translateX(5px); background-color: rgba(255,255,255,0.1) !important; }
-            
-            .topic-link { 
-                display: flex; align-items: center; padding: 15px; 
-                text-decoration: none; width: 100%; box-sizing: border-box; 
-            }
-            
-            .topic-img { overflow: hidden; margin-right: 20px; flex-shrink: 0; background: #333; }
-            .topic-img-tag { width: 100%; height: 100%; object-fit: cover; }
-            
-            .topic-info { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
-            .topic-title { margin: 0 0 5px 0; font-size: 1.1em; font-weight: 600; line-height: 1.3; }
-            .topic-author { font-size: 0.85em; }
-        </style>
-        <?php
+        // Removed inline styles to inherit global styles like the shortcode
     }
 }
