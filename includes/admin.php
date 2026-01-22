@@ -2260,56 +2260,67 @@ function gptwp_render_config_form() {
         </div>
         
         <script>
-        jQuery(document).ready(function($) {
-            // Actualizar hex text al cambiar color
-            $('.gptwp-config-item input[type="color"]').on('input', function() {
-                $(this).next('span').text($(this).val());
-            });
-
-            $('#btn_save_config').click(function() {
-                const btn = $(this);
-                const originalText = btn.html();
-                btn.prop('disabled', true).html('<span class="dashicons dashicons-update spin"></span> Guardando...');
+        (function($) {
+            // Función para inicializar los eventos (compatible con carga AJAX)
+            function initGptwpConfig() {
+                console.log("Inicializando eventos de configuración...");
                 
-                const configData = {
-                    action: 'gptwp_save_dashboard_config',
-                    primary_color: $('#cfg_primary_color').val(),
-                    accent_color: $('#cfg_accent_color').val(),
-                    bg_color: $('#cfg_bg_color').val(),
-                    text_color: $('#cfg_text_color').val(),
-                    button_shadow: $('#cfg_button_shadow').is(':checked') ? 'true' : 'false',
-                    card_radius: $('#cfg_card_radius').val(),
-                    btn_radius: $('#cfg_btn_radius').val(),
-                    btn_border_width: $('#cfg_btn_border_width').val(),
-                    btn_hover_color: $('#cfg_btn_hover_color').val(),
-                    btn_active_color: $('#cfg_btn_active_color').val()
-                };
-                
-                // Usar ajaxUrl global definido arriba o fallback a wp-admin
-                const targetUrl = typeof ajaxUrl !== 'undefined' ? ajaxUrl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php');
-                
-                $.post(targetUrl, configData, function(res) {
-                    console.log('Respuesta de guardado:', res);
-                    if(res.success) {
-                        // Mostrar Alerta Visual
-                        const toast = $('#gptwp-config-toast');
-                        toast.addClass('show success');
-                        setTimeout(() => {
-                            toast.removeClass('show success');
-                            location.reload();
-                        }, 2000);
-                    } else {
-                        console.error('Error al guardar configuración:', res.data);
-                        alert('Error al guardar: ' + res.data);
-                        btn.prop('disabled', false).html(originalText);
-                    }
-                }).fail(function(xhr, status, error) {
-                    console.error('Fallo crítico en AJAX:', status, error);
-                    alert('Error crítico de conexión al servidor.');
-                    btn.prop('disabled', false).html(originalText);
+                // Actualizar hex text al cambiar color (Delegado)
+                $(document).on('input', '.gptwp-config-item input[type="color"]', function() {
+                    $(this).next('span').text($(this).val());
                 });
-            });
-        });
+
+                // Guardar Configuración (Delegado)
+                $(document).off('click', '#btn_save_config').on('click', '#btn_save_config', function(e) {
+                    e.preventDefault();
+                    const btn = $(this);
+                    const originalText = btn.html();
+                    btn.prop('disabled', true).html('<span class="dashicons dashicons-update spin"></span> Guardando...');
+                    
+                    const configData = {
+                        action: 'gptwp_save_dashboard_config',
+                        primary_color: $('#cfg_primary_color').val(),
+                        accent_color: $('#cfg_accent_color').val(),
+                        bg_color: $('#cfg_bg_color').val(),
+                        text_color: $('#cfg_text_color').val(),
+                        button_shadow: $('#cfg_button_shadow').is(':checked') ? 'true' : 'false',
+                        card_radius: $('#cfg_card_radius').val(),
+                        btn_radius: $('#cfg_btn_radius').val(),
+                        btn_border_width: $('#cfg_btn_border_width').val(),
+                        btn_hover_color: $('#cfg_btn_hover_color').val(),
+                        btn_active_color: $('#cfg_btn_active_color').val()
+                    };
+                    
+                    // Asegurar URL de AJAX
+                    const targetUrl = typeof ajaxUrl !== 'undefined' ? ajaxUrl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php');
+                    
+                    $.post(targetUrl, configData, function(res) {
+                        console.log('Respuesta de guardado:', res);
+                        if(res.success) {
+                            const toast = $('#gptwp-config-toast');
+                            toast.addClass('show success');
+                            setTimeout(() => {
+                                toast.removeClass('show success');
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            console.error('Error al guardar:', res.data);
+                            alert('Error al guardar: ' + res.data);
+                            btn.prop('disabled', false).html(originalText);
+                        }
+                    }).fail(function(xhr, status, error) {
+                        console.error('Fallo AJAX:', status, error);
+                        alert('Error de conexión.');
+                        btn.prop('disabled', false).html(originalText);
+                    });
+                });
+            }
+
+            // Ejecutar al cargar el DOM y exponer para llamadas tras AJAX
+            $(document).ready(initGptwpConfig);
+            window.gptwpInitConfig = initGptwpConfig;
+            
+        })(jQuery);
         </script>
         
         <style>
