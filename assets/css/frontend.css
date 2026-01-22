@@ -1,0 +1,843 @@
+/* =========================================
+   ESTILOS FRONTEND - ALEZUX MEMBERS
+   Shortcodes, Widgets y Componentes Públicos
+   ========================================= */
+
+/* --- 1. CURSOS: CARDS Y LISTADOS (courses.php) --- */
+
+/* Grid System */
+.ldwp-grid,
+.ldwp-fluid-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Card Base */
+.ldwp-card,
+.ldwp-card-fluid {
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-lg, 20px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.ldwp-card:hover,
+.ldwp-card-fluid:hover {
+    border-color: var(--accent-gold);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(249, 177, 55, 0.1);
+}
+
+/* Thumbnail Area */
+.ldwp-thumb,
+.ldwp-thumb-wrapper {
+    position: relative;
+    height: 180px;
+    background: #000;
+    overflow: hidden;
+}
+
+.ldwp-thumb img,
+.ldwp-thumb-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+    transition: transform 0.5s ease, opacity 0.3s;
+}
+
+.ldwp-card:hover .ldwp-thumb img,
+.ldwp-card-fluid:hover .ldwp-thumb-wrapper img {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.ldwp-overlay-gradient,
+.ldwp-thumb-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    background: linear-gradient(to top, var(--card-bg), transparent);
+    pointer-events: none;
+}
+
+/* Badges en Cards */
+.ldwp-badge,
+.ldwp-status-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    z-index: 2;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ldwp-badge-enrolled {
+    background: #ffffff;
+    color: #000;
+}
+
+.ldwp-badge-sales,
+.ldwp-badge-info {
+    background: var(--accent-gold);
+    color: #000;
+}
+
+/* Contenido Card */
+.ldwp-content,
+.ldwp-card-body {
+    padding: 25px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.ldwp-titulo,
+.ldwp-card-title {
+    margin: 0 0 15px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.4;
+    font-family: var(--font-title, sans-serif);
+}
+
+/* Mentores (Facepile) */
+.ldwp-mentores-wrapper,
+.ldwp-mentores-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.ldwp-mentores-stack {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+}
+
+.ldwp-avatar-item,
+.ldwp-avatar-stack-item {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--card-bg);
+    overflow: hidden;
+    margin-left: -10px;
+    /* Stack effect */
+    background: #333;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.ldwp-avatar-item:first-child,
+.ldwp-avatar-stack-item:first-child {
+    margin-left: 0;
+}
+
+.ldwp-avatar-img,
+.ldwp-avatar-stack-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.ldwp-avatar-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #333;
+    color: #fff;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.ldwp-mentores-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.ldwp-label-mini {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.ldwp-names-list {
+    font-size: 12px;
+    color: #ccc;
+    font-weight: 500;
+}
+
+/* Barras de Progreso */
+.ldwp-progress-wrapper,
+.ldwp-prog-container {
+    background: #222;
+    height: 6px;
+    width: 100%;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.ldwp-progress-bar,
+.ldwp-prog-bar {
+    background: var(--accent-gold);
+    height: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(249, 177, 55, 0.4);
+}
+
+.ldwp-progress-text,
+.ldwp-meta-text {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: right;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Footer & Botones Card */
+.ldwp-footer,
+.ldwp-card-footer {
+    margin-top: auto;
+}
+
+.ldwp-btn,
+.ldwp-action-btn {
+    display: block;
+    text-align: center;
+    padding: 12px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    transition: 0.3s;
+    width: 100%;
+    box-sizing: border-box;
+    text-transform: uppercase;
+}
+
+.ldwp-btn-primary {
+    background: transparent;
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold);
+}
+
+.ldwp-btn-primary:hover {
+    background: var(--accent-gold);
+    color: #000;
+    box-shadow: 0 5px 20px rgba(249, 177, 55, 0.3);
+}
+
+.ldwp-btn-secondary,
+.ldwp-btn-info {
+    background: #222;
+    color: #ccc;
+    border: 1px solid #333;
+}
+
+.ldwp-btn-secondary:hover,
+.ldwp-btn-info:hover {
+    border-color: #555;
+    color: #fff;
+    background: #333;
+}
+
+
+/* --- 2. LECCIONES: SLIDERS & TOPICS (lessons.php) --- */
+
+/* Slider Wrapper */
+.ldwp-slider-wrapper {
+    margin-bottom: 60px;
+    position: relative;
+}
+
+.slider-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-right: 10px;
+}
+
+.slider-module-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    position: relative;
+    padding-left: 15px;
+    margin: 0;
+    text-transform: capitalize;
+}
+
+.slider-module-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 5px;
+    height: 24px;
+    width: 4px;
+    background: var(--accent-gold);
+    border-radius: 2px;
+}
+
+/* Botones Navegación Slider */
+.slider-nav-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.ldwp-nav-btn {
+    width: 40px !important;
+    height: 40px !important;
+    background: var(--accent-gold) !important;
+    border-radius: 50%;
+    color: #000 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.ldwp-nav-btn:hover {
+    background: #fff !important;
+    transform: scale(1.1);
+}
+
+.ldwp-nav-btn::after {
+    font-size: 14px !important;
+    font-weight: 800;
+}
+
+.swiper-button-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #444 !important;
+    color: #888 !important;
+}
+
+/* Slides Lecciones */
+.lesson-slider .swiper-slide {
+    width: 300px !important;
+    display: flex;
+    justify-content: center;
+}
+
+.ldwp-card-slide {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 500px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    transition: 0.3s;
+}
+
+.ldwp-card-slide:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    z-index: 2;
+}
+
+.ldwp-slide-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.6s;
+}
+
+.ldwp-card-slide:hover .ldwp-slide-thumb img {
+    transform: scale(1.1);
+}
+
+.ldwp-card-locked .ldwp-slide-thumb img {
+    filter: grayscale(100%) brightness(0.4);
+}
+
+.ldwp-locked-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(2px);
+    z-index: 2;
+}
+
+.ldwp-lock-circle {
+    font-size: 32px;
+}
+
+/* Topics List */
+.titulo-leccion h2 {
+    font-size: 28px;
+    color: var(--accent-gold);
+    margin-bottom: 20px;
+}
+
+.contenedor-topics-personalizado {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.topic-item {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 15px;
+    transition: 0.3s;
+}
+
+.topic-item:hover,
+.topic-item.topic-activo {
+    border-color: var(--accent-gold);
+    background: #222;
+}
+
+.topic-link {
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+    gap: 15px;
+}
+
+.topic-img img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.topic-info h3 {
+    margin: 0 0 5px;
+    font-size: 16px;
+    color: #fff;
+}
+
+.topic-author {
+    font-size: 12px;
+    color: #888;
+}
+
+/* Botón Completar Topic */
+.gptwp-complete-btn {
+    background-color: var(--success-green);
+    color: #000;
+    font-weight: 700;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.gptwp-complete-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(77, 255, 136, 0.4);
+}
+
+
+/* --- 3. LOGROS Y NOTIFICACIONES (achievements.php) --- */
+
+/* Notificaciones (Bell) */
+.gptwp-bell-wrapper {
+    position: relative;
+    display: inline-block;
+    font-family: var(--font-main);
+}
+
+.gptwp-bell-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.gptwp-bell-btn:hover,
+.gptwp-bell-btn.active {
+    background: #222;
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+}
+
+.gptwp-bell-btn .dashicons {
+    font-size: 20px;
+}
+
+.gptwp-badge-count {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    background: var(--danger-red);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #0e0e0e;
+}
+
+.gptwp-notif-dropdown {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: -10px;
+    width: 340px;
+    background: #141414;
+    border: 1px solid #333;
+    border-radius: 12px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+}
+
+.gptwp-notif-dropdown.show {
+    display: block;
+    animation: fadeIn 0.2s;
+}
+
+.notif-head {
+    padding: 15px;
+    background: #1f1f1f;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.head-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.head-clear {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.head-clear:hover {
+    color: var(--danger-red);
+}
+
+.notif-item {
+    padding: 15px;
+    border-bottom: 1px solid #222;
+    display: flex;
+    gap: 12px;
+    position: relative;
+    transition: 0.2s;
+}
+
+.notif-item:hover {
+    background: #1a1a1a;
+}
+
+.notif-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.notif-title {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.notif-msg {
+    display: block;
+    font-size: 12px;
+    color: #aaa;
+    line-height: 1.4;
+}
+
+.notif-time {
+    font-size: 10px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Grid Logros Alumnos */
+.gptwp-masonry-grid {
+    column-count: 3;
+    column-gap: 20px;
+    width: 100%;
+}
+
+@media(max-width:768px) {
+    .gptwp-masonry-grid {
+        column-count: 2;
+    }
+}
+
+@media(max-width:480px) {
+    .gptwp-masonry-grid {
+        column-count: 1;
+    }
+}
+
+.logro-student-card {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    background: var(--card-bg);
+    border: 1px solid #222;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    transition: 0.3s;
+}
+
+.logro-student-card:hover {
+    border-color: var(--accent-gold);
+    transform: translateY(-3px);
+}
+
+.card-img-wrapper {
+    height: 180px;
+    position: relative;
+    overflow: hidden;
+}
+
+.logro-student-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.logro-body {
+    padding: 20px;
+}
+
+.logro-tags .tag {
+    background: var(--accent-gold);
+    color: #000;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+/* Modales Frontend Compartidos */
+.gptwp-fe-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 100000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.gptwp-fe-modal-content {
+    background: var(--card-bg);
+    border: 1px solid #333;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.fe-header {
+    padding: 20px;
+    border-bottom: 1px solid #222;
+    display: flex;
+    justify-content: space-between;
+}
+
+.fe-body-scroll {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+
+/* --- 4. PROGRESO: WIDGETS (progress.php) --- */
+
+/* Barra TraderPRO */
+.academia-progreso-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.academia-progreso-barras {
+    display: flex;
+    gap: 3px;
+}
+
+.academia-bar-unit {
+    width: 5px;
+    height: 40px;
+    border-radius: 3px;
+    background: #555;
+}
+
+.academia-bar-unit.active {
+    background: var(--accent-gold);
+    box-shadow: 0 0 5px rgba(249, 177, 55, 0.5);
+}
+
+/* Gauge Premium */
+.gptwp-premium-gauge {
+    max-width: 460px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.gptwp-gauge-svg {
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+.gptwp-course-list {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.gptwp-course-item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #333;
+    padding-bottom: 6px;
+}
+
+.gptwp-course-item strong {
+    color: var(--accent-gold);
+}
+
+/* Widget Semanal/Anual */
+.academy-progress-widget {
+    background: transparent;
+    color: #fff;
+    font-family: var(--font-main);
+}
+
+.apw-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.apw-total {
+    font-size: 30px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.apw-toggle-btn {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #777;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+/* --- 5. GAUGE PREMIUM & COURSE LIST (progress.php) --- */
+.gptwp-premium-gauge {
+    max-width: 460px;
+    margin: 0 auto;
+}
+
+.gptwp-gauge-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    overflow: visible;
+}
+
+.titulo_members {
+    color: white;
+}
+
+
+.apw-toggle-btn:hover,
+.apw-toggle-btn.active {
+    background: var(--accent-gold);
+    color: #000;
+    border-color: var(--accent-gold);
+}
+
+.apw-bar {
+    width: 100%;
+    background: #333;
+    border-radius: 4px;
+    transition: height 0.5s ease;
+    position: relative;
+}
+
+.apw-bar.is-today {
+    background: var(--accent-gold);
+    box-shadow: 0 0 10px rgba(249, 177, 55, 0.4);
+}
+
+.apw-bar:hover {
+    background: #fff;
+}

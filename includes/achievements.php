@@ -144,30 +144,7 @@ add_shortcode('area_notificaciones', function() {
         </div>
     </div>
 
-    <style>
-        .gptwp-bell-wrapper{position:relative;display:inline-block;font-family:'Manrope',sans-serif}
-        .gptwp-bell-btn{width:40px;height:40px;border-radius:50%;background:#1a1a1a;border:1px solid #333;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:.3s}
-        .gptwp-bell-btn:hover,.gptwp-bell-btn.active{background:#222;border-color:#F9B137;color:#F9B137}
-        .gptwp-bell-btn .dashicons{font-size:20px;width:20px;height:20px}
-        .gptwp-badge{position:absolute;top:-3px;right:-3px;background:#ff4d4d;color:#fff;font-size:10px;font-weight:800;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #0e0e0e}
-        .gptwp-notif-dropdown{display:none;position:absolute;top:50px;right:-10px;width:340px;background:#141414;border:1px solid #333;border-radius:12px;box-shadow:0 15px 50px rgba(0,0,0,.8);z-index:99999;overflow:hidden;animation:gptwpSlideDown .2s ease}
-        .gptwp-notif-dropdown.show{display:block}
-        .gptwp-notif-dropdown::before{content:'';position:absolute;top:-6px;right:22px;width:12px;height:12px;background:#222;transform:rotate(45deg);border-left:1px solid #333;border-top:1px solid #333}
-        .notif-head{padding:15px;background:#222;border-bottom:1px solid #333;display:flex;justify-content:space-between;align-items:center}
-        .head-title{font-size:14px;font-weight:700;color:#fff}.head-clear{background:0 0;border:none;color:#888;font-size:11px;cursor:pointer;text-decoration:underline}
-        .head-clear:hover{color:#ff4d4d}.notif-body{max-height:400px;overflow-y:auto}
-        .notif-item{padding:15px;border-bottom:1px solid #222;display:flex;gap:12px;position:relative;transition:.2s}
-        .notif-item:hover{background:#1a1a1a}.notif-icon{width:36px;height:36px;border-radius:50%;border:1px solid #333;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#1f1f1f}
-        .notif-content{flex:1;display:flex;flex-direction:column}.notif-link{text-decoration:none;color:inherit;display:block}
-        .notif-title{display:block;font-size:13px;font-weight:700;color:#fff;margin-bottom:4px}
-        .notif-msg{display:block;font-size:12px;color:#aaa;line-height:1.4}.notif-time{font-size:10px;color:#666;margin-top:5px}
-        .notif-close{position:absolute;top:10px;right:10px;background:0 0;border:none;color:#555;font-size:18px;cursor:pointer;line-height:1;padding:0}
-        .notif-close:hover{color:#ff4d4d}.notif-empty{padding:40px 20px;text-align:center;color:#666}.notif-empty .dashicons{font-size:40px;width:40px;height:40px;margin-bottom:10px;color:#333}
-        .notif-body::-webkit-scrollbar{width:5px}.notif-body::-webkit-scrollbar-thumb{background:#333;border-radius:5px}
-        @keyframes gptwpSlideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-        @media(max-width:480px){.gptwp-notif-dropdown{width:300px;right:-50px}}
-    </style>
-
+    <!-- Estilos movidos a assets/css/frontend.css -->
     <script>
     jQuery(document).ready(function($) {
         const ajaxUrl = '<?php echo admin_url('admin-ajax.php'); ?>';
@@ -404,72 +381,7 @@ add_shortcode('admin_crear_logro', function() {
         <div id="gptwp_toast" class="gptwp-toast"></div>
     </div>
 
-    <!-- ESTILOS ADMIN -->
-    <style>
-        .gptwp-logros-wrapper { font-family:'Manrope', sans-serif; width:100%; color:#fff; box-sizing:border-box; }
-        .gptwp-title { border-bottom:1px solid #333; padding-bottom:15px; margin-bottom:20px; font-size:22px; }
-        .gptwp-layout { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:30px; }
-        .gptwp-card { background:#141414; border:1px solid #222; border-radius:12px; padding:20px; }
-        .gptwp-card h3 { margin:0 0 20px 0; color:#F9B137; font-size:16px; display:flex; align-items:center; gap:8px; }
-        
-        .form-group { margin-bottom:15px; }
-        .form-group label { display:block; font-size:12px; color:#888; margin-bottom:5px; text-transform:uppercase; }
-        select, textarea, input[type="text"] { width:100%; background:#0a0a0a; border:1px solid #333; color:#fff; padding:10px; border-radius:6px; box-sizing:border-box; }
-        select:focus, textarea:focus, input:focus { border-color:#F9B137; outline:none; }
-
-        /* Filtros Historial */
-        .history-filters { display:flex; gap:10px; margin-bottom:15px; }
-        .filter-input { flex:1; }
-        .filter-select { flex:1; }
-
-        /* Imagen Preview */
-        .img-preview-box { position:relative; margin-top:10px; display:inline-block; }
-        .img-preview-box img { height: 150px; width: auto; max-width: 100%; border-radius:6px; display:block; border:1px solid #333; object-fit: contain; }
-        .remove-img-btn { position:absolute; top:5px; right:5px; background:rgba(0,0,0,0.8); color:#fff; width:20px; height:20px; text-align:center; border-radius:50%; cursor:pointer; font-weight:bold; }
-
-        /* Botones */
-        .btn-select-img { background:#222; border:1px dashed #444; color:#ccc; width:100%; padding:12px; border-radius:6px; cursor:pointer; }
-        .btn-publish, .btn-fe-save { width:100%; background:#F9B137; color:#000; border:none; padding:12px; border-radius:50px; font-weight:800; cursor:pointer; margin-top:10px; }
-        .btn-fe-cancel { background:transparent; border:1px solid #444; color:#ccc; padding:10px 20px; border-radius:6px; cursor:pointer; margin-right:10px; }
-        .btn-fe-delete { background:#ff4d4d; border:none; color:#fff; padding:10px 20px; border-radius:6px; cursor:pointer; font-weight:bold; }
-
-        /* Buscador Usuarios */
-        .user-search-wrapper { position:relative; }
-        .user-search-results { position:absolute; top:100%; left:0; width:100%; background:#1a1a1a; border:1px solid #333; z-index:50; display:none; max-height:200px; overflow-y:auto; border-radius:0 0 6px 6px; }
-        .user-result-item { padding:10px; cursor:pointer; border-bottom:1px solid #222; font-size:13px; display:flex; align-items:center; gap:10px; }
-        .user-result-item:hover { background:#333; }
-        .user-result-item img { width:24px; height:24px; border-radius:50%; }
-        .selected-user-display { display:flex; justify-content:space-between; align-items:center; background:rgba(249, 177, 55, 0.15); border:1px solid #F9B137; padding:8px 12px; border-radius:6px; margin-top:5px; }
-        
-        /* Modal Base */
-        .gptwp-fe-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; align-items:center; justify-content:center; }
-        .gptwp-fe-modal-content { background:#1a1a1a; border-radius:12px; border:1px solid #333; box-shadow:0 20px 50px rgba(0,0,0,0.8); display:flex; flex-direction:column; }
-        .admin-modal-size { width: 90%; max-width: 600px; max-height: 80vh; }
-        .confirm-modal-size { width: 90%; max-width: 350px; text-align: center; padding: 30px; }
-        
-        .fe-header { padding:20px; border-bottom:1px solid #222; display:flex; justify-content:space-between; align-items:center; }
-        .fe-header h3 { margin:0; color:#fff; }
-        .fe-close { font-size:24px; cursor:pointer; color:#888; }
-        .fe-body-scroll { padding:20px; overflow-y:auto; }
-        
-        /* Confirm Modal specific */
-        .confirm-icon { font-size: 40px; color: #ff4d4d; margin-bottom: 15px; }
-        .center-actions { justify-content: center; margin-top: 20px; display:flex; gap:10px; }
-
-        /* Lista Historial */
-        .history-list { max-height:600px; overflow-y:auto; }
-        .logro-item-admin { background:#0a0a0a; border:1px solid #333; border-radius:8px; padding:15px; margin-bottom:15px; display:flex; gap:15px; }
-        .logro-thumb { width:60px; height:60px; border-radius:6px; object-fit:cover; background:#222; flex-shrink:0; }
-        .logro-content { flex:1; min-width:0; }
-        .logro-meta { font-size:11px; color:#F9B137; font-weight:700; margin-bottom:5px; }
-        .logro-msg { font-size:13px; color:#ddd; line-height:1.4; margin-bottom:10px; }
-        .admin-actions { display:flex; gap:10px; justify-content:flex-end; }
-        .btn-mini { padding:4px 10px; border-radius:4px; font-size:11px; cursor:pointer; border:1px solid; background:transparent; color:#fff; }
-        
-        .gptwp-toast { visibility:hidden; position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:#333; color:#fff; padding:12px 24px; border-radius:50px; z-index:100000; transition:0.3s; opacity:0; }
-        .gptwp-toast.show { visibility:visible; bottom:50px; opacity:1; }
-    </style>
-
+    <!-- Estilos movidos a assets/css/frontend.css -->
     <script>
     function clearImage(inputSel, boxSel) {
         jQuery(inputSel).val("");
@@ -752,60 +664,7 @@ add_shortcode('ver_mis_logros', function() {
         <?php endif; ?>
     </div>
 
-    <style>
-        .gptwp-student-wrapper { font-family:'Manrope', sans-serif; width:100%; box-sizing:border-box; }
-        .gptwp-masonry-grid { column-count:3; column-gap:20px; width:100%; }
-        
-        .logro-student-card { break-inside:avoid; margin-bottom:20px; background:#141414; border:1px solid #222; border-radius:12px; overflow:hidden; position:relative; transition: transform 0.2s; }
-        .logro-student-card:hover { border-color:#333; transform:translateY(-3px); }
-        
-        .card-img-wrapper { position:relative; width:100%; height:180px; background:#000; overflow:hidden; }
-        .logro-student-img { width:100%; height:100%; object-fit:cover; display:block; }
-        .no-img-placeholder { width:100%; height:100%; background:linear-gradient(45deg, #1a1a1a, #222); }
-        .img-overlay { position:absolute; bottom:0; left:0; width:100%; height:60%; background:linear-gradient(to top, #141414 0%, transparent 100%); pointer-events:none; }
-
-        .logro-body { padding:20px; position:relative; z-index:2; margin-top:-20px; }
-        .logro-tags { display:flex; gap:5px; margin-bottom:10px; flex-wrap:wrap; }
-        .tag { background:#F9B137; color:#000; font-size:10px; font-weight:800; padding:4px 8px; border-radius:4px; text-transform:uppercase; }
-        .tag-user { background:#4dff88; color:#000; display:flex; align-items:center; gap:5px; }
-        .tag-user img { width:14px; height:14px; border-radius:50%; }
-        .logro-text-preview { font-size:14px; color:#ccc; line-height:1.5; margin-bottom:15px; }
-        
-        .btn-view-logro { width:100%; background:#222; color:#fff; border:1px solid #333; padding:10px; border-radius:6px; cursor:pointer; font-size:13px; font-weight:600; transition:0.2s; }
-        .btn-view-logro:hover { background:#F9B137; color:#000; border-color:#F9B137; }
-
-        /* Controles Admin */
-        .admin-controls { position:absolute!important; top:10px!important; right:10px!important; background:rgba(0,0,0,0.85); padding:5px; border-radius:6px; border:1px solid #444; z-index:100!important; display:flex; gap:5px; opacity:1!important; }
-        .btn-icon-edit, .btn-icon-delete { background:transparent; border:none; color:#fff; cursor:pointer; padding:4px; display:flex; align-items:center; justify-content:center; }
-        .btn-icon-edit:hover { color:#F9B137; }
-        .btn-icon-delete:hover { color:#ff4d4d; }
-
-        /* Modales */
-        .gptwp-fe-modal { display:none; position:fixed!important; top:0!important; left:0!important; width:100vw!important; height:100vh!important; background:rgba(0,0,0,0.9)!important; z-index:999999!important; align-items:center; justify-content:center; backdrop-filter:blur(5px); }
-        .gptwp-fe-modal-content { background:#1a1a1a; border-radius:12px; border:1px solid #333; box-shadow:0 20px 60px rgba(0,0,0,0.9); display:flex; flex-direction:column; position:relative; }
-        
-        .student-modal-size { width:90%; max-width:700px; max-height:85vh; }
-        .confirm-modal-size { width:90%; max-width:350px; padding:30px; text-align:center; }
-        
-        .fe-header { padding:20px; border-bottom:1px solid #222; display:flex; justify-content:space-between; align-items:center; }
-        .fe-header h3 { margin:0; color:#fff; }
-        .fe-close { font-size:24px; cursor:pointer; color:#888; }
-        .fe-body-scroll { padding:20px; overflow-y:auto; }
-        .view-content-text { font-size:16px; line-height:1.8; color:#eee; margin-top:20px; white-space:pre-wrap; }
-        .view-meta-row { display:flex; align-items:center; gap:15px; margin-top:15px; color:#888; font-size:13px; border-bottom:1px solid #222; padding-bottom:15px; }
-        .view-user-badge { display:flex; align-items:center; gap:8px; color:#F9B137; font-weight:bold; }
-        .view-user-badge img { width:24px; height:24px; border-radius:50%; }
-        
-        /* Confirm buttons */
-        .confirm-icon { font-size:40px; color:#ff4d4d; margin-bottom:15px; }
-        .center-actions { justify-content:center; margin-top:20px; display:flex; gap:10px; }
-        .btn-fe-cancel { background:transparent; border:1px solid #444; color:#ccc; padding:10px 20px; border-radius:6px; cursor:pointer; }
-        .btn-fe-delete { background:#ff4d4d; border:none; color:#fff; padding:10px 20px; border-radius:6px; cursor:pointer; font-weight:bold; }
-
-        @media(max-width:900px){ .gptwp-masonry-grid{ column-count:2; } }
-        @media(max-width:600px){ .gptwp-masonry-grid{ column-count:1; } }
-    </style>
-
+    <!-- Estilos movidos a assets/css/frontend.css -->
     <script>
     function openStudentModal(data) {
         document.getElementById('view_modal_title').innerText = data.title;

@@ -48,9 +48,11 @@ require_once GPTWP_PATH . 'includes/elementor/class-elementor-loader.php';
 add_action('wp_enqueue_scripts', function() {
     // Estilos Globales
     wp_enqueue_style('gptwp-main-css', GPTWP_URL . 'assets/css/main.css', [], '2.0.6');
+    // Estilos Frontend (Elementos UI, Shortcodes)
+    wp_enqueue_style('gptwp-frontend-css', GPTWP_URL . 'assets/css/frontend.css', ['gptwp-main-css'], '2.0.6');
     
     // Estilos Admin/Dashboard (Solo si es necesario, o global si se usa en shortcodes)
-    wp_enqueue_style('gptwp-admin-css', GPTWP_URL . 'assets/css/admin.css', ['gptwp-main-css'], '2.0.6');
+    wp_enqueue_style('gptwp-admin-css', GPTWP_URL . 'assets/css/admin.css', ['gptwp-main-css', 'gptwp-frontend-css'], '2.0.6');
 });
 
 // FIN DEL DOCUMENTO

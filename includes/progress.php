@@ -376,43 +376,6 @@ function gptwp_premium_course_progress() {
 
     </div>
 
-    <style>
-		.titulo_members{
-			color: white;
-		}
-        .gptwp-premium-gauge {
-            max-width: 460px;
-            margin: 0 auto;
-        }
-
-        .gptwp-gauge-svg {
-            width: 100%;
-            height: auto;
-            display: block;
-            /* Importante: permite que el glow se salga de la caja si es necesario */
-            overflow: visible; 
-        }
-
-        .gptwp-course-list {
-            margin-top: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            font-size: 14px;
-        }
-
-        .gptwp-course-item {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #e5e7eb;
-            padding-bottom: 6px;
-        }
-
-        .gptwp-course-item strong {
-            color: #F9B137;
-        }
-    </style>
-
     <?php
     return ob_get_clean();
 }
@@ -763,97 +726,7 @@ function academy_render_progress_widget() {
 
     ob_start();
     ?>
-    <style>
-        .academy-progress-widget { 
-            position: relative; width: 100%; display: flex; flex-direction: column;
-            font-family: 'Helvetica Neue', Arial, sans-serif; color: #fff; background: transparent;
-        }
-        .apw-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; z-index:1;}
-        .apw-label { font-size: 10px; text-transform: uppercase; color: #888; letter-spacing: 1px; display: block; margin-bottom: 4px; }
-        .apw-total { font-size: 35px; font-weight: 700; margin: 0; line-height: 1; color: #fff; white-space: nowrap; }
-        
-        /* BOTONES */
-        .apw-toggle-container { background: #1a1a1a; border-radius: 50px; padding: 6px; display: inline-flex; border: 1px solid #333; }
-        .apw-toggle-btn { background: transparent; border: none; color: #777; padding: 6px 14px; font-size: 11px; font-weight: 700; border-radius: 50px; cursor: pointer; transition: 0.3s; outline: none; }
-		.apw-toggle-btn:hover { background: #F9B137; border: none; color: #000; padding: 6px 14px; font-size: 11px; font-weight: 700; border-radius: 50px; cursor: pointer; transition: 0.3s; outline: none; }
-        .apw-toggle-btn.active { background: #F9B137; color: #000; box-shadow: 0 2px 8px rgba(249,177,55,0.3); }
-
-        /* BODY - ALTURA FIJA PARA EVITAR COLAPSO */
-        .apw-body-wrapper { 
-            display: flex; width: 100%; 
-            height: 250px; /* Altura segura */
-            position: relative;
-        }
-
-        /* EJE Y - SIN LÍNEA DIVISORIA */
-        .apw-y-axis-col {
-            width: 35px; height: 100%; flex-shrink: 0; position: relative; margin-right: 10px;
-            border-right: none !important; /* QUITAR LÍNEA EXPLÍCITAMENTE */
-        }
-        .apw-y-labels { width: 100%; height: 100%; display: none; flex-direction: column; justify-content: space-between; padding-bottom: 20px; }
-        .apw-y-labels.active-axis { display: flex; }
-        .apw-y-label { font-size: 9px; color: #666; text-align: right; padding-right: 5px; transform: translateY(50%); }
-        .apw-y-label:first-child { transform: translateY(0); }
-        .apw-y-label:last-child { transform: translateY(0); }
-
-        /* CHART AREA */
-        .apw-charts-area { flex: 1; position: relative; height: 100%; }
-        
-        /* QUITAR LÍNEAS DE GRID */
-        .apw-grid-lines { display: none !important; }
-
-        /* CONTAINER GRÁFICAS */
-        .apw-chart-container { 
-            width: 100%; height: 100%; display: none; justify-content: space-between; align-items: flex-end; gap: 4px; padding-bottom: 5px; 
-            z-index: 1; position: relative;
-        }
-        .apw-chart-container.active-chart { display: flex; }
-
-        /* BARRAS DEGRADADAS BONITAS */
-        .apw-bar-group { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; position: relative; cursor: pointer; min-width: 0; transition: z-index 0s; }
-        .apw-bar-group:hover { z-index: 100; } /* Tooltip al frente */
-
-        .apw-bar-wrapper { 
-            width: 100%; height: 100%; display: flex; align-items: flex-end; position: relative;
-            background: transparent; border-radius: 4px;
-        }
-        
-        .apw-bar { 
-            width: 100%; 
-            border-radius: 4px 4px 0 0; 
-            transition: height 0.6s ease;
-            min-height: 4px; 
-            /* DEGRADADO DORADO A TRANSPARENTE */
-            background: linear-gradient(to top, rgba(249, 177, 55, 0.1) 0%, #F9B137 100%);
-            /* GLOW SUAVE */
-            box-shadow: 0 0 15px rgba(249, 177, 55, 0.3);
-            position: relative;
-        }
-        
-        /* BARRA HOY (BLANCA) */
-        .apw-bar-group.is-today .apw-bar { 
-            background: linear-gradient(to top, rgba(255, 255, 255, 0.1) 0%, #ffffff 100%);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-        }
-        
-        .apw-day-label { font-size: 9px; color: #666; margin-top: 8px; text-align: center; font-weight: 600; width: 100%; overflow: hidden; white-space: nowrap; }
-        
-        .apw-tooltip { 
-            position: absolute; top: -35px; left: 50%; transform: translateX(-50%) translateY(5px);
-            background: #F9B137; color: #000; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 800;
-            opacity: 0; transition: 0.2s; pointer-events: none; white-space: nowrap; z-index: 200;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
-        .apw-tooltip:after { content:''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); border-width: 4px 4px 0; border-style: solid; border-color: #F9B137 transparent transparent transparent; }
-        .apw-bar-group:hover .apw-tooltip { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .apw-bar-group:hover .apw-bar { filter: brightness(1.2); }
-
-        @media (max-width: 480px) {
-            .apw-y-axis-col { width: 25px; margin-right: 5px; }
-            .apw-day-label { font-size: 8px; transform: scale(0.9); }
-        }
-    </style>
-
+    <!-- Estilos movidos a assets/css/frontend.css -->
     <div id="<?php echo $widget_id; ?>" class="academy-progress-widget">
         <!-- HEADER -->
         <div class="apw-header">

@@ -8,7 +8,9 @@
     --text-main: #ffffff;
     --text-muted: #888888;
     --radius: 12px;
+    --radius-lg: 20px;
     --font-main: 'Manrope', sans-serif;
+    --font-title: 'Poppins', sans-serif;
 }
 
 /* --- RESET & BASE --- */
@@ -18,12 +20,181 @@ body {
 }
 
 /* --- UTILIDADES --- */
-.text-gold { color: var(--accent-gold); }
-.text-red { color: var(--danger-red); }
-.text-green { color: var(--success-green); }
-.text-muted { color: var(--text-muted); }
+.text-gold {
+    color: var(--accent-gold);
+}
 
-/* Animaciones */
-@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-@keyframes spin { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
-.spin { animation: spin 2s infinite linear; }
+.text-red {
+    color: var(--danger-red);
+}
+
+.text-green {
+    color: var(--success-green);
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+/* Animaciones Completas */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spin {
+    animation: spin 2s infinite linear;
+}
+
+/* --- COMPONENTES UI: BOTONES --- */
+.gptwp-btn {
+    display: inline-block;
+    text-align: center;
+    padding: 12px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: none;
+    outline: none;
+}
+
+.gptwp-btn-primary {
+    background: var(--accent-gold);
+    color: #000;
+}
+
+.gptwp-btn-primary:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(249, 177, 55, 0.3);
+}
+
+.gptwp-btn-outline {
+    background: transparent;
+    border: 1px solid var(--accent-gold);
+    color: var(--accent-gold);
+}
+
+.gptwp-btn-outline:hover {
+    background: var(--accent-gold);
+    color: #000;
+}
+
+.gptwp-btn-dark {
+    background: #222;
+    color: #fff;
+    border: 1px solid #333;
+}
+
+.gptwp-btn-dark:hover {
+    background: #333;
+}
+
+/* --- COMPONENTES UI: CARDS --- */
+.gptwp-card {
+    background: var(--card-bg);
+    border: 1px solid #222;
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* --- COMPONENTES UI: MODALES --- */
+.gptwp-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.gptwp-modal-overlay.is-visible {
+    display: flex;
+    animation: fadeIn 0.3s;
+}
+
+.gptwp-modal-content {
+    background: #111;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 16px;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+    max-height: 90vh;
+}
+
+.gptwp-modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #222;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gptwp-modal-header h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 18px;
+}
+
+.gptwp-modal-close {
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.gptwp-modal-body {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* --- BADGES --- */
+.gptwp-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.badge-gold {
+    background: var(--accent-gold);
+    color: #000;
+}
+
+.badge-black {
+    background: #000;
+    color: #fff;
+    border: 1px solid #333;
+}
