@@ -1830,3 +1830,246 @@ add_action('wp_ajax_gptwp_get_finance_data', function() {
 });
 
 
+<?php
+// ... existing code ...
+
+// ==============================================================================
+// === MÓDULO 4: DASHBOARD MAESTRO (PANEL CENTRALIZADO) ===
+// ==============================================================================
+// Uso: [dashboard-master]
+
+add_shortcode('dashboard-master', function() {
+    // 1. Seguridad: Solo administradores
+    if (!current_user_can('administrator')) {
+        return '<div style="padding:20px; color:#F9B137; text-align:center;">⛔ Acceso Restringido: Solo administradores pueden ver este panel.</div>';
+    }
+
+    ob_start();
+    ?>
+    <div class="gptwp-dashboard-master">
+        
+        <!-- HEADER O NAVBAR -->
+        <div class="gptwp-dash-header">
+            <h2 class="gptwp-dash-title">Panel de Control</h2>
+            <div class="gptwp-dash-nav">
+                <button class="gptwp-dash-tab active" data-target="tab-estudiantes">
+                    <span class="dashicons dashicons-welcome-learn-more"></span> Estudiantes
+                </button>
+                <button class="gptwp-dash-tab" data-target="tab-finanzas">
+                    <span class="dashicons dashicons-chart-line"></span> Finanzas
+                </button>
+                <button class="gptwp-dash-tab" data-target="tab-email">
+                    <span class="dashicons dashicons-email"></span> Email Marketing
+                </button>
+            </div>
+        </div>
+
+        <!-- CONTENIDO DE LOS TABS -->
+        <div class="gptwp-dash-content">
+            
+            <!-- TAB 1: ESTUDIANTES -->
+            <div id="tab-estudiantes" class="gptwp-tab-pane active">
+                <?php echo do_shortcode('[admin_registrar_estudiante]'); ?>
+            </div>
+
+            <!-- TAB 2: FINANZAS (LAYOUT COMPUESTO) -->
+            <div id="tab-finanzas" class="gptwp-tab-pane">
+                
+                <!-- Fila 1: Filtros -->
+                <div style="margin-bottom: 20px;">
+                    <?php echo do_shortcode('[finanzas_filtros]'); ?>
+                </div>
+
+                <!-- Fila 2: KPIs (Grid 4 columnas) -->
+                <div class="gptwp-kpi-grid">
+                    <div class="gptwp-kpi-card">
+                        <small>Ingresos Hoy</small>
+                        <?php echo do_shortcode('[kpi_ingresos_hoy]'); ?>
+                    </div>
+                    <div class="gptwp-kpi-card">
+                        <small>Facturado (Rango)</small>
+                        <?php echo do_shortcode('[kpi_facturado_rango]'); ?>
+                    </div>
+                    <div class="gptwp-kpi-card">
+                        <small>Proyección (7d)</small>
+                        <?php echo do_shortcode('[kpi_proyeccion_7d]'); ?>
+                    </div>
+                    <div class="gptwp-kpi-card">
+                        <small>Cartera Vencida</small>
+                        <?php echo do_shortcode('[kpi_cartera_vencida]'); ?>
+                    </div>
+                </div>
+
+                <!-- Fila 3: Gráfica -->
+                <div class="gptwp-section-box">
+                    <h4 class="gptwp-box-title">Tendencia de Ingresos</h4>
+                    <?php echo do_shortcode('[finanzas_grafica]'); ?>
+                </div>
+
+                <!-- Fila 4: Registro Manual + Tabla Cartera -->
+                <div class="gptwp-finance-split">
+                    <div class="gptwp-finance-form-area">
+                        <?php echo do_shortcode('[admin_registrar_pago]'); ?>
+                    </div>
+                    <div class="gptwp-finance-table-area gptwp-section-box">
+                        <h4 class="gptwp-box-title">Movimientos Recientes</h4>
+                        <?php echo do_shortcode('[finanzas_tabla_cartera]'); ?>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- TAB 3: EMAIL MARKETING -->
+            <div id="tab-email" class="gptwp-tab-pane">
+                <?php echo do_shortcode('[admin_gestor_correos]'); ?>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ESTILOS (SCOPED) -->
+    <style>
+        /* Variables y Reset Básico */
+        .gptwp-dashboard-master {
+            --gold: #F9B137;
+            --dark-bg: #141414;
+            --panel-bg: #1f1f1f;
+            --border: rgba(255,255,255,0.08);
+            font-family: 'Manrope', sans-serif;
+            color: #fff;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header y Nav */
+        .gptwp-dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .gptwp-dash-title {
+            color: #fff;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+        }
+        .gptwp-dash-nav {
+            display: flex;
+            background: #000;
+            padding: 5px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+        }
+        .gptwp-dash-tab {
+            background: transparent;
+            border: none;
+            color: #888;
+            padding: 10px 25px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .gptwp-dash-tab.active {
+            background: var(--gold);
+            color: #000;
+            font-weight: 800;
+            box-shadow: 0 4px 15px rgba(249, 177, 55, 0.3);
+        }
+        .gptwp-dash-tab:hover:not(.active) {
+            color: #fff;
+        }
+        .gptwp-dash-tab .dashicons { font-size: 18px; width: 18px; height: 18px; }
+
+        /* Contenido Tabs */
+        .gptwp-tab-pane { display: none; animation: fadeIn 0.4s ease; }
+        .gptwp-tab-pane.active { display: block; }
+
+        /* KPIs de Finanzas */
+        .gptwp-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .gptwp-kpi-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .gptwp-kpi-card small { color: #888; text-transform: uppercase; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+
+        /* Cajas de Sección */
+        .gptwp-section-box {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        .gptwp-box-title { margin-top: 0; font-size: 16px; color: var(--gold); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Layout Dividido (Manual + Tabla) */
+        .gptwp-finance-split {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        /* Responsive */
+        @media(max-width: 900px) {
+            .gptwp-finance-split { grid-template-columns: 1fr; }
+            .gptwp-dash-header { flex-direction: column; align-items: flex-start; }
+            .gptwp-dash-nav { width: 100%; justify-content: space-between; overflow-x: auto; }
+            .gptwp-dash-tab { padding: 10px 15px; font-size: 12px; white-space: nowrap; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+
+    <!-- INTERACTIVIDAD JS (Simple Tab Switcher) -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabs = document.querySelectorAll('.gptwp-dash-tab');
+        const panes = document.querySelectorAll('.gptwp-tab-pane');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Quitar activo de todos
+                tabs.forEach(t => t.classList.remove('active'));
+                panes.forEach(p => p.classList.remove('active'));
+
+                // Activar actual
+                this.classList.add('active');
+                const targetId = this.getAttribute('data-target');
+                const targetPane = document.getElementById(targetId);
+                if(targetPane) {
+                    targetPane.classList.add('active');
+                    
+                    // IMPORTANTE: Disparar evento de resize window para Chart.js
+                    // Chart.js a veces no renderiza bien si estaba oculto (display:none)
+                    setTimeout(() => {
+                        window.dispatchEvent(new Event('resize'));
+                    }, 100);
+                }
+            });
+        });
+    });
+    </script>
+    <?php
+    return ob_get_clean();
+});
