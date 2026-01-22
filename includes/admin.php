@@ -1574,141 +1574,7 @@ add_shortcode('finanzas_filtros', function() {
         }
     </style>
 
-    <script>
-    jQuery(document).ready(function($) {
-        const ajaxUrl = '<?php echo admin_url('admin-ajax.php'); ?>';
-        // Exponer instancia globalmente para el resize en tabs
-        window.gptwpFinanceChart = null;
-
-        // Inicializar Flatpickr (Rango + Auto Filtrado)
-        const fp = flatpickr("#fin_date_range", {
-            mode: "range",
-            dateFormat: "Y-m-d",
-            defaultDate: [
-                "<?php echo date('Y-m-01'); ?>", 
-                "<?php echo date('Y-m-t'); ?>"
-            ],
-            locale: "es", // Español
-            theme: "dark",
-            onClose: function(selectedDates, dateStr, instance) {
-                // Solo filtrar si hay 2 fechas (inicio y fin)
-                if (selectedDates.length === 2) {
-                    let start = instance.formatDate(selectedDates[0], "Y-m-d");
-                    let end = instance.formatDate(selectedDates[1], "Y-m-d");
-                    loadFinanceData(start, end);
-                }
-            }
-        });
-
-        function loadFinanceData(start, end) {
-            // Si no se pasan fechas (carga inicial), tomarlas del input o defaults
-            if(!start || !end) {
-                let dates = fp.selectedDates;
-                if(dates.length === 2) {
-                    start = fp.formatDate(dates[0], "Y-m-d");
-                    end = fp.formatDate(dates[1], "Y-m-d");
-                } else {
-                    start = "<?php echo date('Y-m-01'); ?>";
-                    end = "<?php echo date('Y-m-t'); ?>";
-                }
-            }
-            
-            // Animación de carga
-            $('.gptwp-kpi-value, #fin_cartera_body').css('opacity', 0.5);
-
-            $.post(ajaxUrl, { 
-                action: 'gptwp_get_finance_data', 
-                start: start, 
-                end: end 
-            }, function(res) {
-                if(res.success) {
-                    let d = res.data;
-
-                    // 1. KPIs
-                    $('#val_ingreso_hoy').text(d.kpi.hoy);
-                    $('#val_ingreso_rango').text(d.kpi.rango);
-                    $('#val_proyeccion').text(d.kpi.proyeccion);
-                    $('#val_mora').text(d.kpi.mora);
-                    
-                    $('.gptwp-kpi-value, #fin_cartera_body').css('opacity', 1);
-
-                    // 2. Tabla
-                    $('#fin_cartera_body').html(d.html_tabla);
-
-                    // 3. Gráfica
-                    if(document.getElementById('financeChart')) {
-                        renderChart(d.grafica.labels, d.grafica.values);
-                    }
-                }
-            });
-        }
-
-        function renderChart(labels, dataPoints) {
-            const ctx = document.getElementById('financeChart').getContext('2d');
-            
-            if (window.gptwpFinanceChart) { window.gptwpFinanceChart.destroy(); }
-
-            // Gradiente Dorado
-            let gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(249, 177, 55, 0.4)');
-            gradient.addColorStop(1, 'rgba(249, 177, 55, 0)'); // Desvanece a transparente
-
-            window.gptwpFinanceChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Ingresos',
-                        data: dataPoints,
-                        borderColor: '#F9B137',
-                        backgroundColor: gradient,
-                        borderWidth: 2,
-                        pointBackgroundColor: '#141414',
-                        pointBorderColor: '#F9B137',
-                        pointBorderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6,
-                        fill: true,
-                        tension: 0.4 // Curva suave
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { 
-                            backgroundColor: '#1a1a1a', 
-                            titleColor: '#F9B137',
-                            bodyColor: '#fff',
-                            borderColor: '#333',
-                            borderWidth: 1,
-                            padding: 10,
-                            displayColors: false,
-                            callbacks: {
-                                label: function(context) { return ' € ' + context.parsed.y; }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: { 
-                            grid: { display: false }, // Sin lineas verticales
-                            ticks: { color: '#666', font: { size: 10 } } 
-                        },
-                        y: { 
-                            grid: { color: 'rgba(255,255,255,0.05)', borderDash: [4, 4] }, // Lineas horizontales sutiles
-                            border: { display: false }, // Sin linea de eje
-                            ticks: { color: '#666', font: { size: 10 }, callback: function(value) { return '€' + value; } } 
-                        }
-                    }
-                }
-            });
-        }
-
-        // Carga inicial
-        loadFinanceData();
-    });
-    </script>
+    <!-- Script movido a dashboard-master para compatibilidad AJAX -->
 
     <?php return ob_get_clean();
 });
@@ -1847,6 +1713,82 @@ add_action('wp_ajax_gptwp_get_finance_data', function() {
 // ... existing code ...
 
 // ==============================================================================
+// 7. AJAX HANDLER: LAZY LOAD TABS
+// ==============================================================================
+add_action('wp_ajax_gptwp_load_dashboard_tab', function() {
+    // Verificar nonce y permisos
+    if (!current_user_can('administrator')) wp_send_json_error('Acceso denegado');
+    // check_ajax_referer('gptwp_admin_nonce', 'nonce'); // Usar si se implementa wp_localize_script
+
+    $tab = sanitize_text_field($_POST['tab']);
+    $content = '';
+
+    switch ($tab) {
+        case 'tab-finanzas':
+            ob_start();
+            ?>
+            <!-- Fila 1: Filtros -->
+            <div style="margin-bottom: 20px;">
+                <?php echo do_shortcode('[finanzas_filtros]'); ?>
+            </div>
+
+            <!-- Fila 2: KPIs (Grid 4 columnas) -->
+            <div class="gptwp-kpi-grid">
+                <div class="gptwp-kpi-card">
+                    <small>Ingresos Hoy</small>
+                    <?php echo do_shortcode('[kpi_ingresos_hoy]'); ?>
+                </div>
+                <div class="gptwp-kpi-card">
+                    <small>Facturado (Rango)</small>
+                    <?php echo do_shortcode('[kpi_facturado_rango]'); ?>
+                </div>
+                <div class="gptwp-kpi-card">
+                    <small>Proyección (7d)</small>
+                    <?php echo do_shortcode('[kpi_proyeccion_7d]'); ?>
+                </div>
+                <div class="gptwp-kpi-card">
+                    <small>Cartera Vencida</small>
+                    <?php echo do_shortcode('[kpi_cartera_vencida]'); ?>
+                </div>
+            </div>
+
+            <!-- Fila 3: Gráfica -->
+            <div class="gptwp-section-box">
+                <h4 class="gptwp-box-title">Tendencia de Ingresos</h4>
+                <?php echo do_shortcode('[finanzas_grafica]'); ?>
+            </div>
+
+            <!-- Fila 4: Registro Manual + Tabla Cartera -->
+            <div class="gptwp-finance-split">
+                <div class="gptwp-finance-form-area">
+                    <?php echo do_shortcode('[admin_registrar_pago]'); ?>
+                </div>
+                <div class="gptwp-finance-table-area gptwp-section-box">
+                    <h4 class="gptwp-box-title">Movimientos Recientes</h4>
+                    <?php echo do_shortcode('[finanzas_tabla_cartera]'); ?>
+                </div>
+            </div>
+            <?php
+            $content = ob_get_clean();
+            break;
+
+        case 'tab-email':
+            $content = do_shortcode('[admin_gestor_correos]');
+            break;
+
+        case 'tab-logros':
+            $content = do_shortcode('[admin_crear_logro]');
+            break;
+            
+        default:
+            wp_send_json_error('Tab desconocido');
+    }
+
+    wp_send_json_success($content);
+});
+
+
+// ==============================================================================
 // === MÓDULO 4: DASHBOARD MAESTRO (PANEL CENTRALIZADO) ===
 // ==============================================================================
 // Uso: [dashboard-master]
@@ -1913,50 +1855,11 @@ add_shortcode('dashboard-master', function() {
             </div>
 
             <!-- TAB 2: FINANZAS (LAYOUT COMPUESTO) -->
-            <div id="tab-finanzas" class="gptwp-tab-pane">
-                
-                <!-- Fila 1: Filtros -->
-                <div style="margin-bottom: 20px;">
-                    <?php echo do_shortcode('[finanzas_filtros]'); ?>
+            <div id="tab-finanzas" class="gptwp-tab-pane" data-loaded="false">
+                <div class="gptwp-loader-container" style="text-align:center; padding:50px; color:#666;">
+                    <span class="dashicons dashicons-update" style="animation: spin 1s infinite linear; font-size:40px; width:40px; height:40px;"></span>
+                    <p style="margin-top:10px;">Cargando Finanzas...</p>
                 </div>
-
-                <!-- Fila 2: KPIs (Grid 4 columnas) -->
-                <div class="gptwp-kpi-grid">
-                    <div class="gptwp-kpi-card">
-                        <small>Ingresos Hoy</small>
-                        <?php echo do_shortcode('[kpi_ingresos_hoy]'); ?>
-                    </div>
-                    <div class="gptwp-kpi-card">
-                        <small>Facturado (Rango)</small>
-                        <?php echo do_shortcode('[kpi_facturado_rango]'); ?>
-                    </div>
-                    <div class="gptwp-kpi-card">
-                        <small>Proyección (7d)</small>
-                        <?php echo do_shortcode('[kpi_proyeccion_7d]'); ?>
-                    </div>
-                    <div class="gptwp-kpi-card">
-                        <small>Cartera Vencida</small>
-                        <?php echo do_shortcode('[kpi_cartera_vencida]'); ?>
-                    </div>
-                </div>
-
-                <!-- Fila 3: Gráfica -->
-                <div class="gptwp-section-box">
-                    <h4 class="gptwp-box-title">Tendencia de Ingresos</h4>
-                    <?php echo do_shortcode('[finanzas_grafica]'); ?>
-                </div>
-
-                <!-- Fila 4: Registro Manual + Tabla Cartera -->
-                <div class="gptwp-finance-split">
-                    <div class="gptwp-finance-form-area">
-                        <?php echo do_shortcode('[admin_registrar_pago]'); ?>
-                    </div>
-                    <div class="gptwp-finance-table-area gptwp-section-box">
-                        <h4 class="gptwp-box-title">Movimientos Recientes</h4>
-                        <?php echo do_shortcode('[finanzas_tabla_cartera]'); ?>
-                    </div>
-                </div>
-
             </div>
 
             <!-- TAB 3: EMAIL MARKETING -->
@@ -2200,34 +2103,183 @@ add_shortcode('dashboard-master', function() {
     document.addEventListener('DOMContentLoaded', function() {
         
         // --- 1. Tabs Principales Dashboard ---
+        // --- 1. Tabs Principales Dashboard ---
         const tabs = document.querySelectorAll('.gptwp-dash-tab');
         const panes = document.querySelectorAll('.gptwp-tab-pane');
+        const ajaxUrl = "<?php echo admin_url('admin-ajax.php'); ?>"; // Ensure URL is available
 
         tabs.forEach(tab => {
             tab.addEventListener('click', function() {
-                // Quitar activo de todos
-                tabs.forEach(t => t.classList.remove('active'));
-                panes.forEach(p => p.classList.remove('active'));
-
-                // Activar actual
-                this.classList.add('active');
                 const targetId = this.getAttribute('data-target');
                 const targetPane = document.getElementById(targetId);
-                if(targetPane) {
-                    targetPane.classList.add('active');
-                    
-                    // IMPORTANTE: Resize explícito para Chart.js
-                    setTimeout(() => {
-                        window.dispatchEvent(new Event('resize'));
-                        if (targetId === 'tab-finanzas' && window.gptwpFinanceChart) {
-                            window.gptwpFinanceChart.resize();
+                
+                // Toggle active state
+                tabs.forEach(t => t.classList.remove('active'));
+                panes.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                if(targetPane) targetPane.classList.add('active');
+
+                // Lazy Load Logic
+                if (targetPane && targetPane.getAttribute('data-loaded') === 'false') {
+                    const formData = new FormData();
+                    formData.append('action', 'gptwp_load_dashboard_tab');
+                    formData.append('tab', targetId);
+
+                    fetch(ajaxUrl, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.success) {
+                            targetPane.innerHTML = data.data;
+                            targetPane.setAttribute('data-loaded', 'true');
+                            
+                            // Trigger post-load events (Chart.js resize, etc)
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('resize'));
+                                if (targetId === 'tab-finanzas' && window.gptwpFinanceChart) {
+                                    window.gptwpFinanceChart.resize();
+                                }
+                                // Re-initialize any specific JS if needed here
+                            }, 50);
+                        } else {
+                            targetPane.innerHTML = '<p style="color:red; text-align:center;">Error cargando contenido: ' + data.data + '</p>';
                         }
-                    }, 50);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        targetPane.innerHTML = '<p style="color:red; text-align:center;">Error de conexión.</p>';
+                    });
+                } else {
+                    // Content already loaded, just resize chart if needed
+                     if (targetId === 'tab-finanzas') {
+                        setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
+                    }
                 }
             });
         });
 
-        // --- 2. Tabs del Modal (NUEVO) ---
+        // --- 2. Finance Module Logic (Lazy Loaded) ---
+        window.gptwpInitFinance = function() {
+            const dateRangeInput = document.getElementById('fin_date_range');
+            if(!dateRangeInput || dateRangeInput.classList.contains('initialized')) return;
+            
+            // Mark as initialized to prevent double init
+            dateRangeInput.classList.add('initialized');
+
+            // Inicializar Flatpickr
+            const fp = flatpickr("#fin_date_range", {
+                mode: "range",
+                dateFormat: "Y-m-d",
+                defaultDate: [
+                    "<?php echo date('Y-m-01'); ?>", 
+                    "<?php echo date('Y-m-t'); ?>"
+                ],
+                locale: "es", 
+                theme: "dark",
+                onClose: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length === 2) {
+                        let start = instance.formatDate(selectedDates[0], "Y-m-d");
+                        let end = instance.formatDate(selectedDates[1], "Y-m-d");
+                        loadFinanceData(start, end);
+                    }
+                }
+            });
+
+            function loadFinanceData(start, end) {
+                if(!start || !end) {
+                    let dates = fp.selectedDates;
+                    if(dates.length === 2) {
+                        start = fp.formatDate(dates[0], "Y-m-d");
+                        end = fp.formatDate(dates[1], "Y-m-d");
+                    } else {
+                        start = "<?php echo date('Y-m-01'); ?>";
+                        end = "<?php echo date('Y-m-t'); ?>";
+                    }
+                }
+                
+                // Animación de carga
+                if(window.jQuery) {
+                    jQuery('.gptwp-kpi-value, #fin_cartera_body').css('opacity', 0.5);
+                    jQuery.post(ajaxUrl, { 
+                        action: 'gptwp_get_finance_data', 
+                        start: start, 
+                        end: end 
+                    }, function(res) {
+                        if(res.success) {
+                            let d = res.data;
+                            jQuery('#val_ingreso_hoy').text(d.kpi.hoy);
+                            jQuery('#val_ingreso_rango').text(d.kpi.rango);
+                            jQuery('#val_proyeccion').text(d.kpi.proyeccion);
+                            jQuery('#val_mora').text(d.kpi.mora);
+                            jQuery('.gptwp-kpi-value, #fin_cartera_body').css('opacity', 1);
+                            jQuery('#fin_cartera_body').html(d.html_tabla);
+
+                            if(document.getElementById('financeChart')) {
+                                renderChart(d.grafica.labels, d.grafica.values);
+                            }
+                        }
+                    });
+                }
+            }
+
+            function renderChart(labels, dataPoints) {
+                const ctx = document.getElementById('financeChart').getContext('2d');
+                if (window.gptwpFinanceChart) { window.gptwpFinanceChart.destroy(); }
+
+                let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(249, 177, 55, 0.4)');
+                gradient.addColorStop(1, 'rgba(249, 177, 55, 0)');
+
+                window.gptwpFinanceChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Ingresos',
+                            data: dataPoints,
+                            borderColor: '#F9B137',
+                            backgroundColor: gradient,
+                            borderWidth: 2,
+                            pointBackgroundColor: '#141414',
+                            pointBorderColor: '#F9B137',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { 
+                                backgroundColor: '#1a1a1a', 
+                                titleColor: '#F9B137',
+                                bodyColor: '#fff',
+                                borderColor: '#333',
+                                borderWidth: 1,
+                                padding: 10,
+                                displayColors: false,
+                                callbacks: { label: function(context) { return ' € ' + context.parsed.y; } }
+                            }
+                        },
+                        scales: {
+                            x: { grid: { display: false }, ticks: { color: '#666', font: { size: 10 } } },
+                            y: { grid: { color: 'rgba(255,255,255,0.05)', borderDash: [4, 4] }, border: { display: false }, ticks: { color: '#666', font: { size: 10 }, callback: function(value) { return '€' + value; } } }
+                        }
+                    }
+                });
+            }
+
+            // Carga inicial
+            loadFinanceData();
+        };
+
+        // --- 3. Tabs del Modal ---
         const modalTabs = document.querySelectorAll('.gptwp-modal-tab');
         const modalPanes = document.querySelectorAll('.gptwp-modal-pane');
 
