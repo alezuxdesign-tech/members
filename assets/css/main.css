@@ -1,0 +1,29 @@
+/* --- VARIABLES GLOBALES --- */
+:root {
+    --bg-dark: #0e0e0e;
+    --card-bg: #141414;
+    --accent-gold: #F9B137;
+    --danger-red: #ff4d4d;
+    --success-green: #4dff88;
+    --text-main: #ffffff;
+    --text-muted: #888888;
+    --radius: 12px;
+    --font-main: 'Manrope', sans-serif;
+}
+
+/* --- RESET & BASE --- */
+body {
+    font-family: var(--font-main);
+    color: var(--text-main);
+}
+
+/* --- UTILIDADES --- */
+.text-gold { color: var(--accent-gold); }
+.text-red { color: var(--danger-red); }
+.text-green { color: var(--success-green); }
+.text-muted { color: var(--text-muted); }
+
+/* Animaciones */
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+@keyframes spin { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
+.spin { animation: spin 2s infinite linear; }
