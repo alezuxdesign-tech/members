@@ -1829,8 +1829,21 @@ add_action('wp_ajax_gptwp_get_course_details', function() {
         wp_send_json_success('<div style="text-align:center; padding:20px; color:#888;">No hay estudiantes inscritos en este curso.</div>');
     }
 
-    // Pre-calcular lecciones del curso para conteo real (sin topics/quizzes)
-    $course_lessons = learndash_get_course_lessons_list($course_id);
+    // Pre-calcular lecciones del curso para conteo real (sin topics/quizzes Y sin Separadores)
+    $course_lessons_raw = learndash_get_course_lessons_list($course_id);
+    $course_lessons = [];
+    
+    // Filtrar Separadores
+    if(!empty($course_lessons_raw)) {
+        foreach($course_lessons_raw as $l) {
+            // Si el título contiene "Separador (Titulo: )", lo ignoramos
+            if (strpos($l->post_title, 'Separador (Titulo:') !== false) {
+                continue; 
+            }
+            $course_lessons[] = $l;
+        }
+    }
+    
     $real_total_lessons = count($course_lessons);
 
     ob_start();
@@ -1851,7 +1864,7 @@ add_action('wp_ajax_gptwp_get_course_details', function() {
                     $progress = learndash_user_get_course_progress($user->ID, $course_id);
                     $percentage = isset($progress['percentage']) ? $progress['percentage'] : 0;
                     
-                    // Cálculo manual de Lecciones Completadas real
+                    // Cálculo manual de Lecciones Completadas real (usando la lista filtrada)
                     $real_completed = 0;
                     if(!empty($course_lessons)) {
                         foreach($course_lessons as $l) {
