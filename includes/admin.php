@@ -1955,8 +1955,16 @@ add_shortcode('dashboard-master', function() {
             --border: rgba(255,255,255,0.08);
             font-family: 'Manrope', sans-serif;
             color: #fff;
-            max-width: 1400px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 100%; /* Ajuste al contenedor padre (Elementor) */
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        /* Asegurar que todos los hijos directos sean responsivos */
+        .gptwp-dashboard-master * {
+            box-sizing: border-box;
+            max-width: 100%;
         }
 
         /* Header y Nav */
@@ -2046,14 +2054,21 @@ add_shortcode('dashboard-master', function() {
             grid-template-columns: 350px 1fr;
             gap: 30px;
             align-items: start;
+            width: 100%;
         }
         
-        /* Responsive */
-        @media(max-width: 900px) {
+        /* Responsive Avanzado */
+        @media(max-width: 1024px) {
             .gptwp-finance-split { grid-template-columns: 1fr; }
-            .gptwp-dash-header { flex-direction: column; align-items: flex-start; }
-            .gptwp-dash-nav { width: 100%; justify-content: space-between; overflow-x: auto; }
-            .gptwp-dash-tab { padding: 10px 15px; font-size: 12px; white-space: nowrap; }
+        }
+
+        @media(max-width: 768px) {
+            .gptwp-dash-header { flex-direction: column; align-items: stretch; gap: 15px; }
+            .gptwp-dash-nav { width: 100%; display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 5px; }
+            .gptwp-dash-tab { flex: 0 0 auto; padding: 12px 20px; font-size: 13px; }
+            
+            .gptwp-kpi-grid { grid-template-columns: 1fr; } /* Grid de 1 col en móviles si es muy estrecho, o dejar 2 */
+            .gptwp-kpi-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); } /* Mejor ajuste automático */
         }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
