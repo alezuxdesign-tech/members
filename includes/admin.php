@@ -3,6 +3,19 @@
 /*                                SECCIÓN ADMINISTRATIVA & CRM                */
 /* -------------------------------------------------------------------------- */
 
+// Encolar scripts externos necesarios para el Dashboard (Chart.js, Flatpickr)
+add_action('admin_enqueue_scripts', function() {
+    if (current_user_can('manage_options') || current_user_can('shop_manager')) {
+        // Flatpickr (Calendario)
+        wp_enqueue_style('gptwp-flatpickr', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css');
+        wp_enqueue_style('gptwp-flatpickr-dark', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css');
+        wp_enqueue_script('gptwp-flatpickr-js', 'https://cdn.jsdelivr.net/npm/flatpickr', [], null, true);
+        
+        // Chart.js (Gráficas)
+        wp_enqueue_script('gptwp-chartjs', 'https://cdn.jsdelivr.net/npm/chart.js', [], null, true);
+    }
+});
+
 // 1. SHORTCODE: GESTOR DE PERMISOS (CRM) V2
 // Uso: [admin_gestor_permisos]
 
@@ -2135,13 +2148,19 @@ add_shortcode('dashboard-master', function() {
                             targetPane.innerHTML = data.data;
                             targetPane.setAttribute('data-loaded', 'true');
                             
-                            // Trigger post-load events (Chart.js resize, etc)
+                            // Trigger post-load events
                             setTimeout(() => {
                                 window.dispatchEvent(new Event('resize'));
-                                if (targetId === 'tab-finanzas' && window.gptwpFinanceChart) {
-                                    window.gptwpFinanceChart.resize();
+                                
+                                // Init Finance Module if this is the finance tab
+                                if (targetId === 'tab-finanzas') {
+                                    if(typeof window.gptwpInitFinance === 'function') {
+                                        window.gptwpInitFinance();
+                                    }
+                                    if (window.gptwpFinanceChart) {
+                                        window.gptwpFinanceChart.resize();
+                                    }
                                 }
-                                // Re-initialize any specific JS if needed here
                             }, 50);
                         } else {
                             targetPane.innerHTML = '<p style="color:red; text-align:center;">Error cargando contenido: ' + data.data + '</p>';
@@ -2154,7 +2173,10 @@ add_shortcode('dashboard-master', function() {
                 } else {
                     // Content already loaded, just resize chart if needed
                      if (targetId === 'tab-finanzas') {
-                        setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
+                        setTimeout(() => {
+                             window.dispatchEvent(new Event('resize'));
+                             if (window.gptwpFinanceChart) window.gptwpFinanceChart.resize();
+                        }, 50);
                     }
                 }
             });
@@ -2300,3 +2322,5 @@ add_shortcode('dashboard-master', function() {
     <?php
     return ob_get_clean();
 });
+
+
