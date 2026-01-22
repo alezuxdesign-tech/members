@@ -2019,8 +2019,13 @@ add_shortcode('dashboard-master', function() {
             font-weight: 800;
             box-shadow: 0 4px 15px rgba(249, 177, 55, 0.3);
         }
-        .gptwp-dash-tab:hover:not(.active) {
-            color: #fff;
+        .gptwp-dash-tab:hover:not(.active),
+        .gptwp-dash-tab:focus {
+            color: var(--gold) !important;
+            background: rgba(255,255,255,0.05) !important;
+            border-color: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
         }
         .gptwp-dash-tab .dashicons { font-size: 18px; width: 18px; height: 18px; }
 
