@@ -1876,6 +1876,12 @@ add_shortcode('dashboard-master', function() {
             <div id="tab-estudiantes" class="gptwp-tab-pane active">
                 
                 <!-- KPIs Estudiantes -->
+                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h3 style="margin:0; color:#fff;">Resumen</h3>
+                    <button class="gptwp-btn-action" onclick="document.getElementById('gptwp-fin-modal').style.display='flex'">
+                        <span class="dashicons dashicons-plus-alt2"></span> Nuevo / Importar
+                    </button>
+                 </div>
                  <div class="gptwp-kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 20px;">
                     <div class="gptwp-kpi-card">
                         <small>Total Alumnos</small>
@@ -1898,12 +1904,9 @@ add_shortcode('dashboard-master', function() {
             <!-- TAB 2: FINANZAS (LAYOUT COMPUESTO) -->
             <div id="tab-finanzas" class="gptwp-tab-pane">
                 
-                <!-- Fila 1: Filtros + Botón Modal -->
-                <div style="margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center;">
+                <!-- Fila 1: Filtros -->
+                <div style="margin-bottom: 20px;">
                     <?php echo do_shortcode('[finanzas_filtros]'); ?>
-                    <button class="gptwp-btn-action" onclick="document.getElementById('gptwp-fin-modal').style.display='flex'">
-                        <span class="dashicons dashicons-plus-alt2"></span> Nuevo / Importar
-                    </button>
                 </div>
 
                 <!-- Fila 2: KPIs (Grid 4 columnas) -->
