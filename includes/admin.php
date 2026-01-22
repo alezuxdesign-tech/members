@@ -1032,16 +1032,27 @@ add_shortcode('gptwp_registro_estudiante', function() {
         .gptwp-check-card span { font-size: 13px; color: #ddd; }
 
         /* BOTÓN PÍLDORA CON HOVER FIX */
+        /* BOTÓN PÍLDORA CON HOVER FIX */
         .gptwp-btn-submit {
-            width: 100%; background: #F9B137; color: #000; border: none;
+            width: 100%; 
+            background: #F9B137 !important; 
+            color: #000 !important; 
+            border: none !important;
             padding: 18px; font-weight: 800; font-size: 16px; cursor: pointer;
             text-transform: uppercase; transition: 0.3s;
             border-radius: 50px; /* Botón píldora */
+            box-shadow: none !important;
+            text-shadow: none !important;
         }
         .gptwp-btn-submit:hover { 
-            background: #fff; 
-            color: #000 !important; /* FORZAR COLOR NEGRO EN HOVER */
-            box-shadow: 0 5px 20px rgba(249,177,55, 0.4); 
+            background: #fff !important; 
+            color: #000 !important; 
+            box-shadow: 0 5px 20px rgba(249,177,55, 0.4) !important; 
+            transform: translateY(-2px);
+        }
+        .gptwp-btn-submit:focus {
+            outline: none !important;
+            box-shadow: 0 0 0 2px #fff, 0 0 0 4px #F9B137 !important;
         }
 
         /* ALERTAS REDONDEADAS */
