@@ -1829,44 +1829,65 @@ add_action('wp_ajax_gptwp_get_course_details', function() {
         wp_send_json_success('<div style="text-align:center; padding:20px; color:#888;">No hay estudiantes inscritos en este curso.</div>');
     }
 
+    // Pre-calcular lecciones del curso para conteo real (sin topics/quizzes)
+    $course_lessons = learndash_get_course_lessons_list($course_id);
+    $real_total_lessons = count($course_lessons);
+
     ob_start();
     ?>
-    <table class="gptwp-crm-table" style="width:100%;">
-        <thead>
-            <tr>
-                <th width="50"></th>
-                <th>Estudiante</th>
-                <th>Email</th>
-                <th>Progreso</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($users as $user): 
-                $progress = learndash_user_get_course_progress($user->ID, $course_id);
-                $percentage = isset($progress['percentage']) ? $progress['percentage'] : 0;
-                $completed_steps = isset($progress['completed']) ? $progress['completed'] : 0;
-                $total_steps = isset($progress['total']) ? $progress['total'] : 0;
-            ?>
-            <tr>
-                <td><?php echo get_avatar($user->ID, 40, '', '', ['class' => 'gptwp-avatar-img']); ?></td>
-                <td>
-                    <strong><?php echo esc_html($user->display_name); ?></strong><br>
-                    <small style="color:#666;">ID: <?php echo $user->ID; ?></small>
-                </td>
-                <td><?php echo esc_html($user->user_email); ?></td>
-                <td>
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <span style="font-weight:700; color:#fff; width:35px;"><?php echo $percentage; ?>%</span>
-                        <div class="gptwp-progress-bar-wrapper" style="width:120px; height:6px;">
-                            <div class="gptwp-progress-bar" style="width: <?php echo $percentage; ?>%; background: var(--gold);"></div>
+    <div style="overflow-x:auto;">
+        <table class="gptwp-crm-table" style="width:100%;">
+            <thead>
+                <tr>
+                    <th style="width:60px; text-align:center;">Foto</th>
+                    <th>Estudiante</th>
+                    <th>Email</th>
+                    <th>Progreso</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($users as $user): 
+                    // Progreso General de LD (incluye todo)
+                    $progress = learndash_user_get_course_progress($user->ID, $course_id);
+                    $percentage = isset($progress['percentage']) ? $progress['percentage'] : 0;
+                    
+                    // Cálculo manual de Lecciones Completadas real
+                    $real_completed = 0;
+                    if(!empty($course_lessons)) {
+                        foreach($course_lessons as $l) {
+                             if(learndash_is_lesson_complete($user->ID, $l->ID, $course_id)) {
+                                 $real_completed++;
+                             }
+                        }
+                    }
+                ?>
+                <tr>
+                    <td style="text-align:center;">
+                        <?php echo get_avatar($user->ID, 40, '', 'Avatar', ['class' => 'gptwp-avatar-img']); ?>
+                    </td>
+                    <td>
+                        <strong style="font-size:14px; color:#fff; display:block; margin-bottom:4px;"><?php echo esc_html($user->display_name); ?></strong>
+                        <small style="color:#666; font-family:monospace;">ID: <?php echo $user->ID; ?></small>
+                    </td>
+                    <td style="font-size:13px; color:#ccc;">
+                        <?php echo esc_html($user->user_email); ?>
+                    </td>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
+                            <span style="font-weight:800; color:#fff; width:35px;"><?php echo $percentage; ?>%</span>
+                            <div class="gptwp-progress-bar-wrapper" style="width:120px; height:6px; background:#333;">
+                                <div class="gptwp-progress-bar" style="width: <?php echo $percentage; ?>%; background: <?php echo ($percentage == 100) ? '#4dff88' : 'var(--gold)'; ?>;"></div>
+                            </div>
                         </div>
-                    </div>
-                    <small style="color:#666;"><?php echo $completed_steps . '/' . $total_steps; ?> Lecciones</small>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+                        <small style="color:#888; font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">
+                            <?php echo $real_completed . ' / ' . $real_total_lessons; ?> Lecciones
+                        </small>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
     <?php
     $html = ob_get_clean();
     wp_send_json_success($html);
@@ -2201,18 +2222,32 @@ add_shortcode('dashboard-master', function() {
         #gptwp_course_modal table.gptwp-crm-table {
             background: rgba(255,255,255,0.02);
             border: 1px solid #333;
+            border-collapse: separate; 
+            border-spacing: 0;
+            width: 100%;
         }
         #gptwp_course_modal table.gptwp-crm-table th {
-            background: #000;
+            background: #111;
             color: var(--gold);
             border-bottom: 2px solid #333;
+            padding: 15px;
+            text-align: left;
+            font-size: 13px;
+            text-transform: uppercase;
         }
         #gptwp_course_modal table.gptwp-crm-table td {
             border-bottom: 1px solid #222;
+            padding: 15px;
+            vertical-align: middle; /* Centrado vertical vital */
+            color: #ddd;
         }
         #gptwp_course_modal .gptwp-avatar-img {
             border-radius: 50%;
             border: 2px solid var(--gold);
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            display: block;
         }
 
         /* Layout Dividido (Manual + Tabla) */
