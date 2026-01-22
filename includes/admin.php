@@ -1565,7 +1565,8 @@ add_shortcode('finanzas_filtros', function() {
     <script>
     jQuery(document).ready(function($) {
         const ajaxUrl = '<?php echo admin_url('admin-ajax.php'); ?>';
-        let financeChartInstance = null;
+        // Exponer instancia globalmente para el resize en tabs
+        window.gptwpFinanceChart = null;
 
         // Inicializar Flatpickr (Rango + Auto Filtrado)
         const fp = flatpickr("#fin_date_range", {
@@ -1633,14 +1634,14 @@ add_shortcode('finanzas_filtros', function() {
         function renderChart(labels, dataPoints) {
             const ctx = document.getElementById('financeChart').getContext('2d');
             
-            if (financeChartInstance) { financeChartInstance.destroy(); }
+            if (window.gptwpFinanceChart) { window.gptwpFinanceChart.destroy(); }
 
             // Gradiente Dorado
             let gradient = ctx.createLinearGradient(0, 0, 0, 400);
             gradient.addColorStop(0, 'rgba(249, 177, 55, 0.4)');
             gradient.addColorStop(1, 'rgba(249, 177, 55, 0)'); // Desvanece a transparente
 
-            financeChartInstance = new Chart(ctx, {
+            window.gptwpFinanceChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
@@ -2106,11 +2107,13 @@ add_shortcode('dashboard-master', function() {
                 if(targetPane) {
                     targetPane.classList.add('active');
                     
-                    // IMPORTANTE: Disparar evento de resize window para Chart.js
-                    // Chart.js a veces no renderiza bien si estaba oculto (display:none)
+                    // IMPORTANTE: Resize explícito para Chart.js
                     setTimeout(() => {
                         window.dispatchEvent(new Event('resize'));
-                    }, 100);
+                        if (targetId === 'tab-finanzas' && window.gptwpFinanceChart) {
+                            window.gptwpFinanceChart.resize();
+                        }
+                    }, 50);
                 }
             });
         });
