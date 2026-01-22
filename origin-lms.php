@@ -46,22 +46,25 @@ require_once GPTWP_PATH . 'includes/elementor/class-elementor-loader.php';
 
 // 9. Encolado de Scripts y Estilos Globales
 add_action('wp_enqueue_scripts', function() {
-    // Estilos Globales
-    wp_enqueue_style('gptwp-main-css', GPTWP_URL . 'assets/css/main.css', [], '2.0.7');
-    // Estilos Frontend (Elementos UI, Shortcodes)
+    // 1. Alezux Design System (Base Variables & Tokens)
+    wp_enqueue_style('alezux-global', GPTWP_URL . 'assets/css/alezux-global.css', [], '1.0.0');
+    
+    // 2. Estilos Globales (Legacy/Base)
+    wp_enqueue_style('gptwp-main-css', GPTWP_URL . 'assets/css/main.css', ['alezux-global'], '2.0.7');
+    
+    // 3. Estilos Frontend (Shortcodes)
     wp_enqueue_style('gptwp-frontend-css', GPTWP_URL . 'assets/css/frontend.css', ['gptwp-main-css'], '2.0.7');
     
-    // Estilos Admin/Dashboard (Solo si es necesario, o global si se usa en shortcodes)
+    // 4. Estilos Admin/Dashboard
     wp_enqueue_style('gptwp-admin-css', GPTWP_URL . 'assets/css/admin.css', ['gptwp-main-css', 'gptwp-frontend-css'], '2.0.7');
 });
 
 // 10. Encolado de Estilos para el Panel Admin (Backend)
 add_action('admin_enqueue_scripts', function() {
-    // Estilos Globales (Variables, etc)
-    wp_enqueue_style('gptwp-main-css', GPTWP_URL . 'assets/css/main.css', [], '2.0.7');
-    
-    // Estilos Admin Específicos
+    wp_enqueue_style('alezux-global', GPTWP_URL . 'assets/css/alezux-global.css', [], '1.0.0');
+    wp_enqueue_style('gptwp-main-css', GPTWP_URL . 'assets/css/main.css', ['alezux-global'], '2.0.7');
     wp_enqueue_style('gptwp-admin-css', GPTWP_URL . 'assets/css/admin.css', ['gptwp-main-css'], '2.0.7');
 });
+
 
 // FIN DEL DOCUMENTO

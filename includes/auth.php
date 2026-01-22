@@ -48,11 +48,15 @@ add_action('after_setup_theme', function() {
 // 📢 Muestra mensajes de error o cierre de sesión en la página de login
 function gptwp_login_error_message_shortcode() {
     if ( isset($_GET['login']) && $_GET['login'] === 'failed' ) {
-        return '⚠️ Usuario o contraseña incorrectos';
+        return '<div class="alx-card alx-animate-fade" style="border-color: var(--alx-danger); margin-bottom: 20px;">
+                    <span class="alx-text" style="color: var(--alx-danger);">⚠️ Usuario o contraseña incorrectos</span>
+                </div>';
     }
 
     if ( isset($_GET['login']) && $_GET['login'] === 'false' ) {
-        return '✅ Sesión cerrada correctamente.';
+        return '<div class="alx-card alx-animate-fade" style="border-color: var(--alx-success); margin-bottom: 20px;">
+                    <span class="alx-text" style="color: var(--alx-success);">✅ Sesión cerrada correctamente.</span>
+                </div>';
     }
 
     return '';

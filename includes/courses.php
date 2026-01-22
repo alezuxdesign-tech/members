@@ -21,7 +21,7 @@ function ld_lista_cursos_fn() {
 
     ob_start();
 
-    echo '<div class="ldwp-grid">';
+    echo '<div class="alx-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">';
 
     foreach($cursos as $curso):
         $curso_id   = $curso->ID;
@@ -34,13 +34,13 @@ function ld_lista_cursos_fn() {
             $badge = 'En Curso';
             $badge_class = 'ldwp-badge-enrolled';
             $btn_text = 'Continuar';
-            $btn_class = 'ldwp-btn-primary'; 
+            $btn_class = 'alx-btn--primary'; 
             $btn_link = $url; 
         } else {
             $badge = 'Premium'; 
             $badge_class = 'ldwp-badge-sales';
             $btn_text = 'Ver más';
-            $btn_class = 'ldwp-btn-secondary'; 
+            $btn_class = 'alx-btn--outline'; 
             $btn_link = $url; 
         }
 
@@ -158,15 +158,15 @@ function ld_lista_cursos_fn() {
         }
         ?>
 
-        <div class="ldwp-card <?php echo $tiene_acceso ? 'access-granted' : 'access-denied'; ?>">
-            <div class="ldwp-thumb">
-                <span class="ldwp-badge <?php echo $badge_class; ?>"><?php echo $badge; ?></span>
+        <div class="alx-card alx-animate-fade <?php echo $tiene_acceso ? 'access-granted' : 'access-denied'; ?>" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+            <div class="ldwp-thumb" style="position: relative; aspect-ratio: 16/9; overflow: hidden;">
+                <span class="alx-badge <?php echo $badge_class; ?>" style="position: absolute; top: 12px; left: 12px; z-index: 5; background: var(--alx-primary); color: #fff; padding: 4px 12px; font-weight: 800; font-size: 10px;text-transform: uppercase;"><?php echo $badge; ?></span>
                 <?php echo $thumb; ?>
-                <div class="ldwp-thumb-overlay"></div>
+                <div class="ldwp-thumb-overlay" style="position: absolute; inset: 0; background: linear-gradient(0deg, rgba(15,15,15,0.8) 0%, rgba(15,15,15,0) 100%);"></div>
             </div>
 
-            <div class="ldwp-content">
-                <h3 class="ldwp-titulo"><?php echo esc_html($curso->post_title); ?></h3>
+            <div class="alx-content" style="padding: 24px; flex: 1; display: flex; flex-direction: column;">
+                <h3 class="alx-title" style="font-size: 1.25rem; margin-bottom: 12px;"><?php echo esc_html($curso->post_title); ?></h3>
 
                 <!-- LISTA DE MENTORES COMPACTA -->
                 <?php echo $mentores_html; ?>
@@ -180,10 +180,10 @@ function ld_lista_cursos_fn() {
                     <p class="ldwp-desc-short">Contenido exclusivo</p>
                 <?php endif; ?>
 
-                <div class="ldwp-footer">
+                <div class="alx-footer" style="margin-top: auto; padding-top: 20px;">
                     <a href="<?php echo esc_url($btn_link); ?>"
-                       class="ldwp-btn <?php echo $btn_class; ?> ldwp-ingresar-curso"
-                       data-curso="<?php echo esc_attr($curso_id); ?>">
+                       class="alx-btn <?php echo $btn_class; ?> ldwp-ingresar-curso"
+                       data-curso="<?php echo esc_attr($curso_id); ?>" style="width: 100%;">
                        <?php echo $btn_text; ?>
                     </a>
                 </div>
