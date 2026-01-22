@@ -2155,11 +2155,16 @@ add_shortcode('admin_tabla_cursos', function() {
  */
 function gptwp_render_config_form() {
     $config = get_option('gptwp_dashboard_config', [
-        'primary_color' => '#f9b137',
-        'accent_color'  => '#f9b137',
-        'bg_color'      => '#141414',
-        'text_color'    => '#ffffff',
-        'button_shadow' => true
+        'primary_color'    => '#f9b137',
+        'accent_color'     => '#f9b137',
+        'bg_color'         => '#141414',
+        'text_color'       => '#ffffff',
+        'button_shadow'    => true,
+        'card_radius'      => 20,
+        'btn_radius'       => 50,
+        'btn_border_width' => 0,
+        'btn_hover_color'  => '#ffffff',
+        'btn_active_color' => '#f9b137'
     ]);
     
     ob_start();
@@ -2208,6 +2213,44 @@ function gptwp_render_config_form() {
                 </label>
                 <p style="color:#666; font-size:11px; margin: 8px 0 0 32px;">Añade un efecto de profundidad y resplandor a los botones principales.</p>
             </div>
+
+            <!-- NUEVAS OPCIONES DE BORDES Y HOVERS -->
+            <div class="gptwp-config-item">
+                <label>Radio de Bordes: Tarjetas (px)</label>
+                <input type="number" id="cfg_card_radius" value="<?php echo (int)$config['card_radius']; ?>" class="gptwp-config-input">
+            </div>
+            
+            <div class="gptwp-config-item">
+                <label>Radio de Bordes: Botones (px)</label>
+                <input type="number" id="cfg_btn_radius" value="<?php echo (int)$config['btn_radius']; ?>" class="gptwp-config-input">
+            </div>
+
+            <div class="gptwp-config-item">
+                <label>Grosor del Borde en Botones (px)</label>
+                <input type="number" id="cfg_btn_border_width" value="<?php echo (int)$config['btn_border_width']; ?>" class="gptwp-config-input">
+            </div>
+
+            <div class="gptwp-config-item">
+                <label>Color Hover de Botones</label>
+                <div class="color-picker-wrapper">
+                    <input type="color" id="cfg_btn_hover_color" value="<?php echo esc_attr($config['btn_hover_color']); ?>">
+                    <span><?php echo esc_html($config['btn_hover_color']); ?></span>
+                </div>
+            </div>
+
+            <div class="gptwp-config-item">
+                <label>Color Active de Botones (Click)</label>
+                <div class="color-picker-wrapper">
+                    <input type="color" id="cfg_btn_active_color" value="<?php echo esc_attr($config['btn_active_color']); ?>">
+                    <span><?php echo esc_html($config['btn_active_color']); ?></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Toast de Alerta -->
+        <div id="gptwp-config-toast" class="gptwp-toast">
+            <span class="gptwp-toast-icon dashicons dashicons-yes"></span>
+            <span class="gptwp-toast-message">Configuración actualizada</span>
         </div>
         
         <div style="margin-top:40px; border-top: 1px solid #333; padding-top:20px; display:flex; justify-content: flex-end;">
@@ -2226,7 +2269,7 @@ function gptwp_render_config_form() {
             $('#btn_save_config').click(function() {
                 const btn = $(this);
                 const originalText = btn.html();
-                btn.prop('disabled', true).html('<span class="dashicons dashicons-update spin"></span> Aplicando...');
+                btn.prop('disabled', true).html('<span class="dashicons dashicons-update spin"></span> Guardando...');
                 
                 const configData = {
                     action: 'gptwp_save_dashboard_config',
@@ -2234,15 +2277,23 @@ function gptwp_render_config_form() {
                     accent_color: $('#cfg_accent_color').val(),
                     bg_color: $('#cfg_bg_color').val(),
                     text_color: $('#cfg_text_color').val(),
-                    button_shadow: $('#cfg_button_shadow').is(':checked') ? 'true' : 'false'
+                    button_shadow: $('#cfg_button_shadow').is(':checked') ? 'true' : 'false',
+                    card_radius: $('#cfg_card_radius').val(),
+                    btn_radius: $('#cfg_btn_radius').val(),
+                    btn_border_width: $('#cfg_btn_border_width').val(),
+                    btn_hover_color: $('#cfg_btn_hover_color').val(),
+                    btn_active_color: $('#cfg_btn_active_color').val()
                 };
                 
                 $.post(ajaxurl, configData, function(res) {
                     if(res.success) {
-                        btn.removeClass('gptwp-btn-save').css('background', '#4dff88').html('<span class="dashicons dashicons-yes"></span> ¡APLICADO!');
+                        // Mostrar Alerta Visual
+                        const toast = $('#gptwp-config-toast');
+                        toast.addClass('show success');
                         setTimeout(() => {
+                            toast.removeClass('show success');
                             location.reload();
-                        }, 1000);
+                        }, 2000);
                     } else {
                         alert('Error al guardar: ' + res.data);
                         btn.prop('disabled', false).html(originalText);
@@ -2253,12 +2304,18 @@ function gptwp_render_config_form() {
         </script>
         
         <style>
-        .gptwp-config-form { background: #141414; padding: 40px; border-radius: 20px; border: 1px solid #333; }
+        .gptwp-config-form { background: #141414; padding: 40px; border-radius: 20px; border: 1px solid #333; position: relative; }
         .gptwp-config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
         .gptwp-config-item label { display: block; margin-bottom: 12px; color: #aaa; font-size: 13px; font-weight: bold; }
+        .gptwp-config-input { width: 100%; background: #0a0a0a; border: 1px solid #222; border-radius: 8px; color: #fff; padding: 10px; box-sizing: border-box; }
         .color-picker-wrapper { display: flex; align-items: center; gap: 15px; background: #0a0a0a; padding: 8px 15px; border-radius: 8px; border: 1px solid #222; }
         .color-picker-wrapper input[type="color"] { width: 40px; height: 30px; border: none; background: transparent; cursor: pointer; padding: 0; }
         .color-picker-wrapper span { font-family: monospace; color: #888; font-size: 13px; text-transform: uppercase; }
+        
+        /* Toast Styles */
+        .gptwp-toast { position: fixed; bottom: 30px; right: 30px; background: #1a1a1a; color: #fff; padding: 15px 25px; border-radius: 12px; border: 1px solid #333; display: flex; align-items: center; gap: 10px; transform: translateY(100px); transition: 0.3s; z-index: 10001; font-weight: bold; visibility: hidden; opacity: 0; }
+        .gptwp-toast.show { visibility: visible; opacity: 1; transform: translateY(0); }
+        .gptwp-toast.success { border-color: #4dff88; color: #4dff88; }
         </style>
     </div>
     <?php
@@ -2272,11 +2329,16 @@ add_action('wp_ajax_gptwp_save_dashboard_config', function() {
     if (!current_user_can('administrator')) wp_send_json_error('Acceso denegado');
     
     $config = [
-        'primary_color'  => sanitize_hex_color($_POST['primary_color']),
-        'accent_color'   => sanitize_hex_color($_POST['accent_color']),
-        'bg_color'       => sanitize_hex_color($_POST['bg_color']),
-        'text_color'     => sanitize_hex_color($_POST['text_color']),
-        'button_shadow'  => $_POST['button_shadow'] === 'true'
+        'primary_color'    => sanitize_hex_color($_POST['primary_color']),
+        'accent_color'     => sanitize_hex_color($_POST['accent_color']),
+        'bg_color'         => sanitize_hex_color($_POST['bg_color']),
+        'text_color'       => sanitize_hex_color($_POST['text_color']),
+        'button_shadow'    => $_POST['button_shadow'] === 'true',
+        'card_radius'      => (int)$_POST['card_radius'],
+        'btn_radius'       => (int)$_POST['btn_radius'],
+        'btn_border_width' => (int)$_POST['btn_border_width'],
+        'btn_hover_color'  => sanitize_hex_color($_POST['btn_hover_color']),
+        'btn_active_color' => sanitize_hex_color($_POST['btn_active_color'])
     ];
     
     update_option('gptwp_dashboard_config', $config);
@@ -2294,26 +2356,50 @@ add_action('wp_head', function() {
     $accent = $config['accent_color'] ?: '#f9b137';
     $bg = $config['bg_color'] ?: '#141414';
     $text = $config['text_color'] ?: '#ffffff';
-    $shadow = $config['button_shadow'] ? '0 5px 20px rgba('.implode(',', gptwp_hex2rgb($accent)).', 0.4)' : 'none';
+    $card_rad = isset($config['card_radius']) ? (int)$config['card_radius'] : 20;
+    $btn_rad = isset($config['btn_radius']) ? (int)$config['btn_radius'] : 50;
+    $btn_border = isset($config['btn_border_width']) ? (int)$config['btn_border_width'] : 0;
+    $btn_hover = $config['btn_hover_color'] ?: '#ffffff';
+    $btn_active = $config['btn_active_color'] ?: '#f9b137';
+    
+    $shadow_val = $config['button_shadow'] ? '0 5px 20px rgba('.implode(',', gptwp_hex2rgb($accent)).', 0.4)' : 'none';
+    $hover_shadow = $config['button_shadow'] ? '0 8px 25px rgba('.implode(',', gptwp_hex2rgb($accent)).', 0.6)' : 'none';
     
     echo "<style id='gptwp-dynamic-styles'>
     :root {
         --accent-gold: $primary !important;
         --card-bg: $bg !important;
         --text-main: $text !important;
+        --radius-lg: {$card_rad}px !important;
+        --radius: {$card_rad}px !important;
     }
     .gptwp-dashboard-master { 
         --gold: $primary !important; 
         background-color: var(--bg-dark) !important; 
     }
-    .gptwp-section-box, .gptwp-card-table, .gptwp-config-form, .gptwp-fluid-form { 
+    .gptwp-section-box, .gptwp-card-table, .gptwp-config-form, .gptwp-fluid-form, .gptwp-card { 
         background-color: $bg !important; 
         color: $text !important;
+        border-radius: {$card_rad}px !important;
     }
-    .gptwp-btn-save, .gptwp-btn-submit, .btn-enroll { 
+    /* Estilos de Botones */
+    .gptwp-btn-save, .gptwp-btn-submit, .btn-enroll, .gptwp-btn-primary { 
         background-color: $accent !important; 
-        box-shadow: $shadow !important;
+        box-shadow: $shadow_val !important;
+        border-radius: {$btn_rad}px !important;
+        border: {$btn_border}px solid $primary !important;
+        transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
+    .gptwp-btn-save:hover, .gptwp-btn-submit:hover, .btn-enroll:hover, .gptwp-btn-primary:hover {
+        background-color: $btn_hover !important;
+        transform: translateY(-3px) !important;
+        box-shadow: $hover_shadow !important;
+    }
+    .gptwp-btn-save:active, .gptwp-btn-submit:active, .btn-enroll:active, .gptwp-btn-primary:active {
+        background-color: $btn_active !important;
+        transform: translateY(-1px) !important;
+    }
+
     .gptwp-box-title, .gptwp-dash-title, .gptwp-form-head { 
         color: $primary !important; 
         border-color: $primary !important;
