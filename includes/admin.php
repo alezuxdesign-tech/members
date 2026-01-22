@@ -2012,6 +2012,73 @@ add_shortcode('dashboard-master', function() {
                 if(targetPane) targetPane.classList.add('active');
             });
         });
+        
+        // --- 4. Configuración Visual (Event Delegation Vanilla JS) ---
+        document.addEventListener('input', function(e) {
+            if (e.target.matches('.gptwp-config-item input[type="color"]')) {
+                const span = e.target.nextElementSibling;
+                if (span) span.textContent = e.target.value;
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('#btn_save_config');
+            if (btn) {
+                e.preventDefault();
+                const originalText = btn.innerHTML;
+                btn.disabled = true;
+                btn.innerHTML = '<span class="dashicons dashicons-update spin"></span> Guardando...';
+                
+                const configData = {
+                    action: 'gptwp_save_dashboard_config',
+                    primary_color: document.getElementById('cfg_primary_color').value,
+                    accent_color: document.getElementById('cfg_accent_color').value,
+                    bg_color: document.getElementById('cfg_bg_color').value,
+                    text_color: document.getElementById('cfg_text_color').value,
+                    button_shadow: document.getElementById('cfg_button_shadow').checked ? 'true' : 'false',
+                    card_radius: document.getElementById('cfg_card_radius').value,
+                    btn_radius: document.getElementById('cfg_btn_radius').value,
+                    btn_border_width: document.getElementById('cfg_btn_border_width').value,
+                    btn_hover_color: document.getElementById('cfg_btn_hover_color').value,
+                    btn_active_color: document.getElementById('cfg_btn_active_color').value
+                };
+                
+                const formData = new FormData();
+                for (const key in configData) {
+                    formData.append(key, configData[key]);
+                }
+                
+                fetch(ajaxUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if(res.success) {
+                        const toast = document.getElementById('gptwp-config-toast');
+                        if (toast) {
+                            toast.classList.add('show', 'success');
+                            setTimeout(() => {
+                                toast.classList.remove('show', 'success');
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            location.reload();
+                        }
+                    } else {
+                        alert('Error al guardar: ' + res.data);
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                    }
+                })
+                .catch(err => {
+                    console.error('Error saving config:', err);
+                    alert('Error de conexión al guardar.');
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                });
+            }
+        });
 
     });
     </script>
@@ -2258,70 +2325,6 @@ function gptwp_render_config_form() {
                 <span class="dashicons dashicons-saved" style="margin-right:8px;"></span> GUARDAR CAMBIOS VISUALES
             </button>
         </div>
-        
-        <script>
-        (function($) {
-            // Función para inicializar los eventos (compatible con carga AJAX)
-            function initGptwpConfig() {
-                console.log("Inicializando eventos de configuración...");
-                
-                // Actualizar hex text al cambiar color (Delegado)
-                $(document).on('input', '.gptwp-config-item input[type="color"]', function() {
-                    $(this).next('span').text($(this).val());
-                });
-
-                // Guardar Configuración (Delegado)
-                $(document).off('click', '#btn_save_config').on('click', '#btn_save_config', function(e) {
-                    e.preventDefault();
-                    const btn = $(this);
-                    const originalText = btn.html();
-                    btn.prop('disabled', true).html('<span class="dashicons dashicons-update spin"></span> Guardando...');
-                    
-                    const configData = {
-                        action: 'gptwp_save_dashboard_config',
-                        primary_color: $('#cfg_primary_color').val(),
-                        accent_color: $('#cfg_accent_color').val(),
-                        bg_color: $('#cfg_bg_color').val(),
-                        text_color: $('#cfg_text_color').val(),
-                        button_shadow: $('#cfg_button_shadow').is(':checked') ? 'true' : 'false',
-                        card_radius: $('#cfg_card_radius').val(),
-                        btn_radius: $('#cfg_btn_radius').val(),
-                        btn_border_width: $('#cfg_btn_border_width').val(),
-                        btn_hover_color: $('#cfg_btn_hover_color').val(),
-                        btn_active_color: $('#cfg_btn_active_color').val()
-                    };
-                    
-                    // Asegurar URL de AJAX
-                    const targetUrl = typeof ajaxUrl !== 'undefined' ? ajaxUrl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php');
-                    
-                    $.post(targetUrl, configData, function(res) {
-                        console.log('Respuesta de guardado:', res);
-                        if(res.success) {
-                            const toast = $('#gptwp-config-toast');
-                            toast.addClass('show success');
-                            setTimeout(() => {
-                                toast.removeClass('show success');
-                                location.reload();
-                            }, 2000);
-                        } else {
-                            console.error('Error al guardar:', res.data);
-                            alert('Error al guardar: ' + res.data);
-                            btn.prop('disabled', false).html(originalText);
-                        }
-                    }).fail(function(xhr, status, error) {
-                        console.error('Fallo AJAX:', status, error);
-                        alert('Error de conexión.');
-                        btn.prop('disabled', false).html(originalText);
-                    });
-                });
-            }
-
-            // Ejecutar al cargar el DOM y exponer para llamadas tras AJAX
-            $(document).ready(initGptwpConfig);
-            window.gptwpInitConfig = initGptwpConfig;
-            
-        })(jQuery);
-        </script>
         
         <style>
         .gptwp-config-form { background: #141414; padding: 40px; border-radius: 20px; border: 1px solid #333; position: relative; }
