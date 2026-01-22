@@ -1942,6 +1942,11 @@ add_shortcode('dashboard-master', function() {
                 <?php echo do_shortcode('[admin_gestor_correos]'); ?>
             </div>
 
+            <!-- TAB 4: LOGROS -->
+            <div id="tab-logros" class="gptwp-tab-pane">
+                <?php echo do_shortcode('[admin_crear_logro]'); ?>
+            </div>
+
         </div>
     </div>
 
